@@ -44,7 +44,9 @@
             width: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #ff9f43;
+            background-color: white;
+            padding: 3px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
         .logo-text h1 {
@@ -65,6 +67,11 @@
             color: white;
             cursor: pointer;
             padding: 8px;
+            transition: transform 0.3s;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.1);
         }
 
         /* Меню */
@@ -125,11 +132,14 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 999;
-            display: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
         }
 
         .overlay.active {
-            display: block;
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Основной контент */
@@ -143,6 +153,7 @@
             text-align: center;
             margin: 20px auto;
             max-width: 600px;
+            transition: all 0.5s ease;
         }
 
         .radio-logo-large {
@@ -150,16 +161,19 @@
             height: 180px;
             border-radius: 20px;
             object-fit: cover;
-            border: 5px solid #ff9f43;
-            box-shadow: 0 10px 30px rgba(255, 159, 67, 0.4);
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             margin: 0 auto 20px;
             display: block;
+            transition: all 0.5s ease;
         }
 
         .radio-title {
             font-size: 28px;
             margin-bottom: 10px;
             color: #ff9f43;
+            transition: all 0.5s ease;
         }
 
         .radio-subtitle {
@@ -178,6 +192,7 @@
             border-radius: 24px;
             padding: 5px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
         }
 
         .player-btn {
@@ -208,8 +223,24 @@
             color: white;
         }
 
+        /* Анимация пульсации для кнопки */
+        @keyframes buttonPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 159, 67, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
+        }
+
+        .player-btn.playing {
+            animation: buttonPulse 2s infinite;
+        }
+
         .player-btn i {
             font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .player-btn:hover i {
+            transform: scale(1.1);
         }
 
         .status {
@@ -220,6 +251,21 @@
             border-radius: 50px;
             display: inline-block;
             min-width: 200px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        /* Анимация точки в статусе */
+        @keyframes dotBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .status.playing::after {
+            content: ' ●';
+            color: #ff9f43;
+            animation: dotBlink 1s infinite;
+            margin-left: 5px;
         }
 
         /* Соцсети */
@@ -245,7 +291,7 @@
         }
 
         .social-icon:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.1);
         }
 
         /* Порядок соцсетей */
@@ -278,18 +324,24 @@
             text-align: center;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s;
+            transition: all 0.3s;
         }
 
         .info-card:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         .info-card i {
             font-size: 30px;
             color: #ff9f43;
             margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover i {
+            transform: scale(1.2);
         }
 
         .info-card h3 {
@@ -315,6 +367,7 @@
             font-size: 14px;
             opacity: 0.9;
             z-index: 99;
+            transition: all 0.3s;
         }
 
         /* Секции контента */
@@ -336,6 +389,7 @@
             margin-bottom: 20px;
             border-bottom: 2px solid #ff9f43;
             padding-bottom: 10px;
+            animation: slideIn 0.6s ease;
         }
 
         .program-list {
@@ -349,7 +403,23 @@
             margin-bottom: 10px;
             border-radius: 10px;
             border-left: 5px solid #ff9f43;
+            transition: all 0.3s;
+            animation: fadeInUp 0.5s ease backwards;
         }
+
+        .program-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .program-item:nth-child(1) { animation-delay: 0.1s; }
+        .program-item:nth-child(2) { animation-delay: 0.2s; }
+        .program-item:nth-child(3) { animation-delay: 0.3s; }
+        .program-item:nth-child(4) { animation-delay: 0.4s; }
+        .program-item:nth-child(5) { animation-delay: 0.5s; }
+        .program-item:nth-child(6) { animation-delay: 0.6s; }
+        .program-item:nth-child(7) { animation-delay: 0.7s; }
+        .program-item:nth-child(8) { animation-delay: 0.8s; }
 
         .program-time {
             color: #ff9f43;
@@ -369,6 +439,7 @@
             font-size: 18px;
             font-weight: bold;
             transition: all 0.3s;
+            animation: fadeInUp 0.8s ease;
         }
 
         .support-link:hover {
@@ -376,19 +447,35 @@
             box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
         }
 
+        /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 159, 67, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .pulse {
-            animation: pulse 2s infinite;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Эффект при воспроизведении */
+        .playing-mode .radio-info {
+            transform: scale(0.98);
+        }
+
+        .playing-mode .player-container {
+            background: rgba(255, 159, 67, 0.15);
+            box-shadow: 0 4px 25px rgba(255, 159, 67, 0.3);
+        }
+
+        .playing-mode .status {
+            background: rgba(255, 159, 67, 0.2);
+            color: #ff9f43;
         }
 
         /* Адаптивность */
@@ -400,16 +487,25 @@
                 width: 150px;
                 height: 150px;
             }
+            .radio-title {
+                font-size: 24px;
+            }
         }
 
         @media (max-width: 480px) {
             .player-btn {
                 height: 55px;
                 font-size: 16px;
+                padding: 0 20px;
             }
             footer {
                 font-size: 12px;
                 padding: 12px 15px;
+            }
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
             }
         }
     </style>
@@ -584,12 +680,12 @@
         </div>
         
         <a href="https://t.me/KurushD_bot" class="support-link" target="_blank">
-            <i class="fab fa-telegram"></i> Написать в поддержку (Telegram бот)
+            <i class="fab fa-telegram"></i> Написать в поддержку
         </a>
         
         <p style="margin-top: 30px; font-size: 16px;">Или свяжитесь другими способами:</p>
         <p>📧 Email: support@kurushdigital.com</p>
-        <p>🌐 Сайт: kurushdigital.com</p>
+        <p>📞 Сайт: kurushdigital.com</p>
     </div>
 
     <!-- Секция "Версия" -->
@@ -598,10 +694,10 @@
         <div style="background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px;">
             <p style="font-size: 20px; margin-bottom: 10px;"><strong>Isfara FM Radio Player</strong></p>
             <p>Версия: <strong>1.0.0</strong> (Release)</p>
-            <p>Дата сборки: <strong>Июнь 2024</strong></p>
+            <p>Дата сборки: <strong>Январь 2026</strong></p>
             <p>Тип лицензии: <strong>Бесплатная</strong></p>
             <p>Поддерживаемые ОС: <strong>Android 8.0+</strong></p>
-            <p>Размер приложения: <strong>~5 MB</strong></p>
+            <p>Размер приложения: <strong>~50 MB</strong></p>
         </div>
     </div>
 
@@ -624,30 +720,33 @@
         const playBtn = document.getElementById('playBtn');
         const radioStream = document.getElementById('radioStream');
         const status = document.getElementById('status');
-        const mainLogo = document.getElementById('mainLogo');
+        const body = document.body;
         
         // Переменные состояния
         let isPlaying = false;
         let currentSection = 'main';
 
-        // Открытие/закрытие меню
+        // Анимация открытия/закрытия меню
         menuBtn.addEventListener('click', () => {
             sideMenu.classList.add('active');
             overlay.classList.add('active');
+            menuBtn.style.transform = 'rotate(90deg)';
         });
 
         overlay.addEventListener('click', () => {
             sideMenu.classList.remove('active');
             overlay.classList.remove('active');
+            menuBtn.style.transform = 'rotate(0deg)';
         });
 
-        // Переключение секций
+        // Переключение секций с анимацией
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', () => {
                 const section = item.getAttribute('data-section');
                 showSection(section);
                 sideMenu.classList.remove('active');
                 overlay.classList.remove('active');
+                menuBtn.style.transform = 'rotate(0deg)';
             });
         });
 
@@ -661,14 +760,16 @@
             if (section === 'main') {
                 document.getElementById('mainContent').style.display = 'block';
                 currentSection = 'main';
+                body.classList.remove('playing-mode');
             } else {
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById(section + 'Section').classList.add('active');
                 currentSection = section;
+                body.classList.remove('playing-mode');
             }
         }
 
-        // Управление плеером
+        // Управление плеером с анимациями
         playBtn.addEventListener('click', togglePlay);
 
         function togglePlay() {
@@ -678,15 +779,25 @@
                     isPlaying = true;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i><span>Пауза</span>';
                     playBtn.classList.add('playing');
-                    status.textContent = 'Слушаем Isfara FM...';
-                    mainLogo.classList.add('pulse');
-                    status.style.background = 'rgba(255, 159, 67, 0.3)';
+                    status.textContent = 'Слушаем Isfara FM';
+                    status.classList.add('playing');
+                    
+                    // Включаем режим воспроизведения
+                    body.classList.add('playing-mode');
+                    
+                    // Анимация иконки
+                    const icon = playBtn.querySelector('i');
+                    icon.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        icon.style.transform = 'scale(1)';
+                    }, 300);
+                    
                 }).catch(error => {
                     console.error("Ошибка воспроизведения:", error);
                     status.textContent = 'Ошибка подключения. Проверьте интернет.';
                     status.style.background = 'rgba(255, 50, 50, 0.3)';
                     
-                    // Попробовать альтернативный поток через 3 секунды
+                    // Пробуем переподключиться
                     setTimeout(() => {
                         status.textContent = 'Пробуем переподключиться...';
                         radioStream.play();
@@ -699,49 +810,73 @@
                 playBtn.innerHTML = '<i class="fas fa-play"></i><span>Слушать радио онлайн</span>';
                 playBtn.classList.remove('playing');
                 status.textContent = 'Пауза';
-                mainLogo.classList.remove('pulse');
-                status.style.background = 'rgba(255, 255, 255, 0.1)';
+                status.classList.remove('playing');
+                body.classList.remove('playing-mode');
+                
+                // Анимация иконки
+                const icon = playBtn.querySelector('i');
+                icon.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    icon.style.transform = 'scale(1)';
+                }, 300);
             }
         }
 
         // Обработчики событий аудио
         radioStream.addEventListener('playing', () => {
-            status.textContent = 'Слушаем Isfara FM...';
-            status.style.background = 'rgba(255, 159, 67, 0.3)';
+            status.textContent = 'Слушаем Isfara FM';
+            status.classList.add('playing');
         });
 
         radioStream.addEventListener('waiting', () => {
             status.textContent = 'Буферизация...';
+            status.classList.remove('playing');
         });
 
         radioStream.addEventListener('error', () => {
-            status.textContent = 'Ошибка подключения. Проверьте интернет.';
+            status.textContent = 'Ошибка подключения';
             status.style.background = 'rgba(255, 50, 50, 0.3)';
+            status.classList.remove('playing');
             isPlaying = false;
             playBtn.innerHTML = '<i class="fas fa-play"></i><span>Слушать радио онлайн</span>';
             playBtn.classList.remove('playing');
-            mainLogo.classList.remove('pulse');
+            body.classList.remove('playing-mode');
         });
 
-        // Авто-переподключение при потере связи
+        // Авто-переподключение
         radioStream.addEventListener('ended', () => {
             if (isPlaying) {
                 setTimeout(() => {
-                    radioStream.play();
                     status.textContent = 'Переподключение...';
+                    radioStream.play();
                 }, 2000);
             }
+        });
+
+        // Плавный скролл для якорей
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
 
         // Инициализация
         showSection('main');
         
-        // Автозапуск при загрузке (опционально, раскомментируйте если нужно)
-        // setTimeout(() => {
-        //     if (!isPlaying) {
-        //         togglePlay();
-        //     }
-        // }, 1000);
+        // Небольшая задержка для плавного появления
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+        }, 100);
     </script>
 </body>
 </html>
