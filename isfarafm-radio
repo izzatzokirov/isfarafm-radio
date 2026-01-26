@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isfara FM - Официальное радио</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; min-height: 100vh; }
+        
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; text-align: center; }
+        
+        /* Шапка */
+        .header { padding: 40px 0; }
+        .logo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid #e74c3c; margin-bottom: 20px; }
+        h1 { font-size: 2.8em; margin-bottom: 10px; color: #f1c40f; }
+        .slogan { color: #bdc3c7; font-size: 1.2em; margin-bottom: 30px; }
+        
+        /* Плеер */
+        .player { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 25px; padding: 30px; margin: 30px 0; border: 1px solid rgba(255, 255, 255, 0.2); }
+        #playBtn { background: linear-gradient(to right, #e74c3c, #c0392b); color: white; border: none; padding: 20px 50px; font-size: 1.5em; border-radius: 50px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        #playBtn:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3); }
+        #status { margin-top: 20px; color: #2ecc71; font-size: 1.1em; }
+        
+        /* Соцсети */
+        .socials { display: flex; justify-content: center; gap: 25px; margin: 40px 0; flex-wrap: wrap; }
+        .social-icon { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8em; color: white; transition: all 0.3s; text-decoration: none; }
+        .social-icon:hover { background: #e74c3c; transform: translateY(-5px); }
+        
+        /* Футер */
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #95a5a6; font-size: 0.9em; }
+        .dev { margin-top: 10px; }
+        .dev a { color: #3498db; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка с лого -->
+        <div class="header">
+            <img src="https://via.placeholder.com/150/FF0000/FFFFFF?text=ISFARA+FM" alt="Isfara FM Logo" class="logo" id="logo">
+            <h1>ISFARA FM</h1>
+            <p class="slogan">Голос вашего города. Прямой эфир 24/7</p>
+        </div>
+
+        <!-- Плеер -->
+        <div class="player">
+            <button id="playBtn">
+                <i class="fas fa-play"></i> СЛУШАТЬ ОНЛАЙН
+            </button>
+            <p id="status">Нажмите кнопку для начала трансляции</p>
+            <audio id="radioStream" preload="none">
+                <!-- ВСТАВЬ СВОЮ ССЫЛКУ НА ПОТОК НИЖЕ -->
+                <source src="https://c34.radioboss.fm:8880/stream" type="audio/mpeg">
+                Ваш браузер не поддерживает аудиоплеер.
+            </audio>
+        </div>
+
+        <!-- Соцсети -->
+        <div class="socials">
+            <a href="https://instagram.com/isfarafm" class="social-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://t.me/isfarafm" class="social-icon" target="_blank"><i class="fab fa-telegram"></i></a>
+            <a href="https://youtube.com/isfarafm" class="social-icon" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://isfarafm.com" class="social-icon" target="_blank"><i class="fas fa-globe"></i></a>
+        </div>
+
+        <!-- Футер -->
+        <div class="footer">
+            <p>© 2024 Isfara FM. Все права защищены.</p>
+            <p class="dev">Приложение разработано <a href="https://t.me/твой_телеграм" target="_blank">Kurush Digital</a></p>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('radioStream');
+        const playBtn = document.getElementById('playBtn');
+        const statusText = document.getElementById('status');
+        const icon = playBtn.querySelector('i');
+
+        playBtn.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                icon.className = 'fas fa-pause';
+                playBtn.innerHTML = '<i class="fas fa-pause"></i> ПАУЗА';
+                statusText.innerHTML = 'Сейчас в эфире: <b>Isfara FM</b>';
+                statusText.style.color = '#2ecc71';
+            } else {
+                audio.pause();
+                icon.className = 'fas fa-play';
+                playBtn.innerHTML = '<i class="fas fa-play"></i> СЛУШАТЬ ОНЛАЙН';
+                statusText.innerHTML = 'Трансляция остановлена';
+                statusText.style.color = '#e74c3c';
+            }
+        });
+
+        // Замена placeholder лого на реальное (если есть URL)
+        // document.getElementById('logo').src = 'https://isfarafm.com/logo.png';
+    </script>
+</body>
+</html>
