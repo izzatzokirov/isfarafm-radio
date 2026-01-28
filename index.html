@@ -14,8 +14,8 @@
         }
 
         :root {
-            --primary: #8A2BE2;
-            --secondary: #4B0082;
+            --primary: #6b03c9;
+            --secondary: #a707ed;
             --accent: #FF6B35;
             --accent-hover: #FF8C42;
             --text: #FFFFFF;
@@ -24,11 +24,11 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--primary) 100%);
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
         }
 
         /* Языковой переключатель */
@@ -76,7 +76,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            background: rgba(138, 43, 226, 0.4);
+            background: rgba(107, 3, 201, 0.4);
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 100;
@@ -92,11 +92,8 @@
         .logo {
             height: 50px;
             width: 50px;
-            border-radius: 50%;
             object-fit: contain;
-            background: var(--accent);
-            padding: 5px;
-            box-shadow: 0 0 15px rgba(255, 107, 53, 0.7);
+            background: transparent;
         }
 
         .logo-text h1 {
@@ -122,19 +119,20 @@
             padding: 8px;
         }
 
-        /* Боковое меню */
+        /* Боковое меню - РАСШИРЕННОЕ */
         .side-menu {
             position: fixed;
             top: 0;
-            right: -300px;
-            width: 280px;
+            right: -320px;
+            width: 300px;
             height: 100%;
-            background: rgba(75, 0, 130, 0.95);
-            backdrop-filter: blur(15px);
+            background: rgba(75, 0, 130, 0.97);
+            backdrop-filter: blur(20px);
             transition: right 0.4s ease;
             z-index: 1000;
             padding: 100px 25px 30px;
             overflow-y: auto;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4);
         }
 
         .side-menu.active {
@@ -201,30 +199,29 @@
         }
 
         .radio-logo-large {
-            width: 180px;
-            height: 180px;
-            border-radius: 20px;
+            width: 200px;
+            height: 200px;
             object-fit: contain;
-            background: var(--accent);
-            padding: 15px;
-            border: 5px solid white;
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+            background: transparent;
             margin: 0 auto 20px;
             display: block;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
         }
 
         .radio-title {
             font-size: 28px;
             margin-bottom: 10px;
             color: var(--text);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .radio-frequency {
-            font-size: 20px;
+            font-size: 22px;
             color: #FFD700;
             font-weight: bold;
             margin-bottom: 30px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            letter-spacing: 1px;
         }
 
         /* Кнопка плеера с анимацией */
@@ -281,7 +278,7 @@
 
         .player-btn.playing {
             background: linear-gradient(135deg, #FF4500, #FF6B35);
-            box-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+            box-shadow: 0 0 25px rgba(255, 107, 53, 0.9);
         }
 
         @keyframes shine {
@@ -303,46 +300,7 @@
             min-width: 200px;
         }
 
-        /* Соцсети */
-        .social-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-
-        .social-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .social-icon:hover {
-            transform: translateY(-5px) scale(1.1);
-        }
-
-        .social-icon:nth-child(1) {
-            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
-        }
-        .social-icon:nth-child(2) {
-            background: #0088cc;
-        }
-        .social-icon:nth-child(3) {
-            background: #25D366;
-        }
-        .social-icon:nth-child(4) {
-            background: #FF0000;
-        }
-
-        /* Интерактивные блоки - 4 шт */
+        /* Интерактивные блоки - 4 шт (БЕЗ РАСПИСАНИЯ + ВИДЕО) */
         .interactive-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -409,10 +367,51 @@
             border: 1px dashed rgba(255, 107, 53, 0.5);
         }
 
-        /* Расписание по дням */
+        /* СОЦСЕТИ - ПЕРЕМЕЩЕНЫ НИЖЕ */
+        .social-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 50px 0 30px;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-icon:nth-child(1) {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        }
+        .social-icon:nth-child(2) {
+            background: #0088cc;
+        }
+        .social-icon:nth-child(3) {
+            background: #25D366;
+        }
+        .social-icon:nth-child(4) {
+            background: #FF0000;
+        }
+
+        /* Расписание по дням (только в меню) */
         .days-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 10px;
             margin: 20px 0;
         }
@@ -427,6 +426,7 @@
             transition: all 0.3s;
             text-align: center;
             font-weight: 500;
+            font-size: 14px;
         }
 
         .day-btn:hover {
@@ -468,12 +468,12 @@
             width: 100%;
             text-align: center;
             padding: 15px 20px;
-            background: rgba(138, 43, 226, 0.6);
+            background: rgba(107, 3, 201, 0.7);
             backdrop-filter: blur(10px);
             font-size: 14px;
-            opacity: 0.9;
             z-index: 99;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
         }
 
         /* Секции контента */
@@ -541,9 +541,9 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 107, 53, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+            0% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)); }
+            100% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
         }
 
         .pulse {
@@ -559,12 +559,15 @@
                 grid-template-columns: repeat(3, 1fr);
             }
             .radio-logo-large {
-                width: 150px;
-                height: 150px;
+                width: 180px;
+                height: 180px;
             }
             .language-switcher {
                 top: 10px;
                 right: 60px;
+            }
+            .side-menu {
+                width: 280px;
             }
         }
 
@@ -579,6 +582,11 @@
             }
             .days-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .social-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
             }
         }
     </style>
@@ -599,7 +607,7 @@
     <!-- Шапка -->
     <header>
         <div class="logo-container">
-            <img src="https://i.ibb.co/cV8LHHh/photo-2024-06-15-20-41-32.jpg" alt="Isfara FM Logo" class="logo">
+            <img src="https://i.ibb.co/39MLN2z8/photo-2026-01-28-08-19-22-no-bg-preview-carve-photos.png" alt="Isfara FM Logo" class="logo">
             <div class="logo-text">
                 <h1>Isfara FM</h1>
                 <p class="radio-frequency" data-ru="93.9FM" data-tj="93.9FM">93.9FM</p>
@@ -610,7 +618,7 @@
         </button>
     </header>
 
-    <!-- Боковое меню -->
+    <!-- Боковое меню - РАСШИРЕННОЕ -->
     <div class="side-menu" id="sideMenu">
         <div class="menu-header" data-ru="Меню" data-tj="Меню">Меню</div>
         <div class="menu-item" data-section="main">
@@ -620,6 +628,22 @@
         <div class="menu-item" data-section="programs">
             <i class="fas fa-tv"></i>
             <span data-ru="Программы" data-tj="Барномаҳо">Программы</span>
+        </div>
+        <div class="menu-item" data-section="videos">
+            <i class="fas fa-video"></i>
+            <span data-ru="Видео" data-tj="Видеоҳо">Видео</span>
+        </div>
+        <div class="menu-item" data-section="gallery">
+            <i class="fas fa-images"></i>
+            <span data-ru="Галерея" data-tj="Галерея">Галерея</span>
+        </div>
+        <div class="menu-item" data-section="team">
+            <i class="fas fa-users"></i>
+            <span data-ru="Наша команда" data-tj="Дастаи мо">Наша команда</span>
+        </div>
+        <div class="menu-item" data-section="partners">
+            <i class="fas fa-handshake"></i>
+            <span data-ru="Партнёры" data-tj="Шарикон">Партнёры</span>
         </div>
         <div class="menu-item" data-section="about">
             <i class="fas fa-info-circle"></i>
@@ -635,7 +659,7 @@
     <!-- Главный экран -->
     <div class="main-content" id="mainContent">
         <div class="radio-info">
-            <img src="https://i.ibb.co/cV8LHHh/photo-2024-06-15-20-41-32.jpg" alt="Isfara FM" class="radio-logo-large pulse" id="mainLogo">
+            <img src="https://i.ibb.co/39MLN2z8/photo-2026-01-28-08-19-22-no-bg-preview-carve-photos.png" alt="Isfara FM" class="radio-logo-large pulse" id="mainLogo">
             <h1 class="radio-title" data-ru="Isfara FM" data-tj="Исфара FM">Isfara FM</h1>
             <p class="radio-frequency">93.9FM</p>
             
@@ -648,22 +672,7 @@
             
             <div class="status" id="status" data-ru="Готово к воспроизведению" data-tj="Барои пахш кардан омода аст">Готово к воспроизведению</div>
             
-            <div class="social-container">
-                <a href="https://instagram.com/isfarafm" class="social-icon" target="_blank">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://t.me/isfarafm" class="social-icon" target="_blank">
-                    <i class="fab fa-telegram-plane"></i>
-                </a>
-                <a href="https://wa.me/992346251010" class="social-icon" target="_blank">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-                <a href="https://youtube.com/c/IsfaraFM" class="social-icon" target="_blank">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            </div>
-            
-            <!-- 4 интерактивных блока -->
+            <!-- 4 интерактивных блока (БЕЗ РАСПИСАНИЯ + ВИДЕО) -->
             <div class="interactive-grid">
                 <div class="interactive-card" data-content="news">
                     <i class="fas fa-newspaper"></i>
@@ -685,12 +694,12 @@
                     </div>
                 </div>
                 
-                <div class="interactive-card" data-content="schedule">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3 data-ru="Расписание" data-tj="Ҷадвали барномаҳо">Расписание</h3>
+                <div class="interactive-card" data-content="videos">
+                    <i class="fas fa-video"></i>
+                    <h3 data-ru="Видео ролики" data-tj="Видео клипҳо">Видео ролики</h3>
                     <div class="card-content">
-                        <div class="no-content-msg" data-ru="Полное расписание в разделе 'Программы'" data-tj="Ҷадвали пурра дар бахши 'Барномаҳо'">
-                            Полное расписание в разделе 'Программы'
+                        <div class="no-content-msg" data-ru="Видео пока нет, но скоро будут интересные ролики!" data-tj="Дар ҳоли ҳазор видео нест, аммо ба зудӣ клипҳои ҷолиб хоҳад буд!">
+                            Видео пока нет, но скоро будут интересные ролики!
                         </div>
                     </div>
                 </div>
@@ -705,6 +714,23 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- СОЦСЕТИ - ПЕРЕМЕЩЕНЫ НИЖЕ -->
+            <div class="social-container">
+                <!-- ВСТАВЬТЕ РЕАЛЬНЫЕ ССЫЛКИ -->
+                <a href="https://instagram.com/isfarafm" class="social-icon" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://t.me/isfarafm" class="social-icon" target="_blank">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+                <a href="https://wa.me/992346251010" class="social-icon" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://youtube.com/c/IsfaraFM" class="social-icon" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -717,7 +743,7 @@
             <button class="day-btn" data-day="tuesday" data-ru="Вторник" data-tj="Сешанбе">Вторник</button>
             <button class="day-btn" data-day="wednesday" data-ru="Среда" data-tj="Чоршанбе">Среда</button>
             <button class="day-btn" data-day="thursday" data-ru="Четверг" data-tj="Панҷшанбе">Четверг</button>
-            <button class="day-btn" data-day="friday" data-ru="Пятница" data-tj="Ҷумъа">Пятница</button>
+            <button class="day-btn active" data-day="friday" data-ru="Пятница" data-tj="Ҷумъа">Пятница</button>
             <button class="day-btn" data-day="saturday" data-ru="Суббота" data-tj="Шанбе">Суббота</button>
             <button class="day-btn" data-day="sunday" data-ru="Воскресенье" data-tj="Якшанбе">Воскресенье</button>
         </div>
@@ -725,6 +751,50 @@
         <!-- Программы по дням -->
         <div id="schedules-container">
             <!-- Контент будет генерироваться JavaScript -->
+        </div>
+    </div>
+
+    <!-- Секция "Видео" -->
+    <div class="content-section" id="videosSection">
+        <h2 class="section-title" data-ru="Видео ролики" data-tj="Видео клипҳо">Видео ролики</h2>
+        <div class="no-content-msg" style="max-width: 600px; margin: 30px auto; padding: 30px; text-align: center; font-size: 18px;">
+            <i class="fas fa-video" style="font-size: 50px; margin-bottom: 20px; color: var(--accent);"></i>
+            <p data-ru="Видео раздел находится в разработке. Скоро здесь появятся интересные ролики с мероприятий и интервью!" data-tj="Бахши видео дар ҳоли рушд аст. Ба зудӣ дар ин ҷо клипҳои ҷолиби аз маросимҳо ва муколамаҳо пайдо мешаванд!">
+                Видео раздел находится в разработке. Скоро здесь появятся интересные ролики с мероприятий и интервью!
+            </p>
+        </div>
+    </div>
+
+    <!-- Секция "Галерея" -->
+    <div class="content-section" id="gallerySection">
+        <h2 class="section-title" data-ru="Галерея" data-tj="Галерея">Галерея</h2>
+        <div class="no-content-msg" style="max-width: 600px; margin: 30px auto; padding: 30px; text-align: center; font-size: 18px;">
+            <i class="fas fa-images" style="font-size: 50px; margin-bottom: 20px; color: var(--accent);"></i>
+            <p data-ru="Фотогалерея скоро будет доступна! Здесь появятся фото с эфиров, мероприятий и встреч." data-tj="Галереяи аксҳо ба зудӣ дастрас мешавад! Дар ин ҷо аксҳо аз эфирҳо, маросимҳо ва дидорҳо пайдо мешаванд.">
+                Фотогалерея скоро будет доступна! Здесь появятся фото с эфиров, мероприятий и встреч.
+            </p>
+        </div>
+    </div>
+
+    <!-- Секция "Наша команда" -->
+    <div class="content-section" id="teamSection">
+        <h2 class="section-title" data-ru="Наша команда" data-tj="Дастаи мо">Наша команда</h2>
+        <div class="no-content-msg" style="max-width: 600px; margin: 30px auto; padding: 30px; text-align: center; font-size: 18px;">
+            <i class="fas fa-users" style="font-size: 50px; margin-bottom: 20px; color: var(--accent);"></i>
+            <p data-ru="Информация о нашей команде скоро появится! Знакомьтесь с ведущими и сотрудниками Isfara FM." data-tj="Маълумот дар бораи дастаи мо ба зудӣ пайдо мешавад! Бо мудирони барномаҳо ва кормандони Исфара FM шинос шавед.">
+                Информация о нашей команде скоро появится! Знакомьтесь с ведущими и сотрудниками Isfara FM.
+            </p>
+        </div>
+    </div>
+
+    <!-- Секция "Партнёры" -->
+    <div class="content-section" id="partnersSection">
+        <h2 class="section-title" data-ru="Наши партнёры" data-tj="Шарикони мо">Наши партнёры</h2>
+        <div class="no-content-msg" style="max-width: 600px; margin: 30px auto; padding: 30px; text-align: center; font-size: 18px;">
+            <i class="fas fa-handshake" style="font-size: 50px; margin-bottom: 20px; color: var(--accent);"></i>
+            <p data-ru="Раздел с нашими партнёрами и спонсорами скоро будет заполнен." data-tj="Бахши шарикон ва ҳомиёни мо ба зудӣ пур карда мешавад.">
+                Раздел с нашими партнёрами и спонсорами скоро будет заполнен.
+            </p>
         </div>
     </div>
 
@@ -838,7 +908,7 @@
             setupLanguageSwitcher();
             setupInteractiveCards();
             setupDaySchedule();
-            showDaySchedule('monday');
+            showDaySchedule('friday');
             showSection('main');
         });
 
@@ -949,12 +1019,10 @@
         function switchLanguage(lang) {
             currentLang = lang;
             
-            // Обновляем активную кнопку
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
             });
             
-            // Обновляем все тексты с data атрибутами
             document.querySelectorAll('[data-ru]').forEach(element => {
                 if (element.getAttribute(`data-${lang}`)) {
                     if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
@@ -965,12 +1033,10 @@
                 }
             });
             
-            // Обновляем статус плеера
             if (isPlaying) {
                 status.textContent = lang === 'ru' ? 'Слушаем Isfara FM...' : 'Исфара FM-ро гӯш мекунем...';
             }
             
-            // Обновляем расписание
             updateScheduleLanguage();
         }
 
@@ -980,7 +1046,6 @@
                 card.addEventListener('click', function() {
                     this.classList.toggle('active');
                     
-                    // Закрываем другие карточки
                     document.querySelectorAll('.interactive-card').forEach(otherCard => {
                         if (otherCard !== this && otherCard.classList.contains('active')) {
                             otherCard.classList.remove('active');
@@ -996,13 +1061,11 @@
                 btn.addEventListener('click', function() {
                     const day = this.getAttribute('data-day');
                     
-                    // Обновляем активную кнопку
                     document.querySelectorAll('.day-btn').forEach(b => {
                         b.classList.remove('active');
                     });
                     this.classList.add('active');
                     
-                    // Показываем расписание
                     showDaySchedule(day);
                 });
             });
@@ -1035,13 +1098,6 @@
                 showDaySchedule(day);
             }
         }
-
-        // ========== АВТОЗАПУСК (опционально) ==========
-        // setTimeout(() => {
-        //     if (!isPlaying) {
-        //         togglePlay();
-        //     }
-        // }, 1000);
     </script>
 </body>
 </html>
