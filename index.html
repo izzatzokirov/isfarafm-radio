@@ -623,7 +623,7 @@
         <div class="menu-header" data-ru="Меню" data-tj="Меню">Меню</div>
         <div class="menu-item" data-section="main">
             <i class="fas fa-home"></i>
-            <span data-ru="Главная" data-tj=" Саҳифаи асосӣ">Главная</span>
+            <span data-ru="Главная" data-tj="Асосӣ">Главная</span>
         </div>
         <div class="menu-item" data-section="programs">
             <i class="fas fa-tv"></i>
@@ -819,7 +819,7 @@
         
         <a href="https://t.me/KurushD_bot" class="support-link" target="_blank">
             <i class="fab fa-telegram"></i>
-            <span data-ru="Написать в поддержку (Telegram)" data-tj="Ба мо нависед (Telegram бот)">Написать в поддержку (Telegram бот)</span>
+            <span data-ru="Написать в поддержку (Telegram бот)" data-tj="Ба мо нависед (Telegram бот)">Написать в поддержку (Telegram бот)</span>
         </a>
     </div>
 
@@ -827,7 +827,6 @@
     <footer>
         <p data-ru="© 2024 Радиостанция 'Isfara FM'. Все права защищены." data-tj="© 2024 Радиостансия 'Исфара FM'. Ҳама ҳуқуқҳо ҳифз шудаанд.">
             © 2024 Радиостанция "Isfara FM". Все права защищены.
-            Разработчик приложения  Kurush Digital
         </p>
     </footer>
 
@@ -849,61 +848,62 @@
         let isPlaying = false;
         let currentLang = 'ru';
 
-        // ========== ДАННЫЕ ПРОГРАММ ПО ДНЯМ ==========
+        // ========== ДАННЫЕ ПРОГРАММ ПО ДНЯМ - ИСПРАВЛЕНО ==========
         const schedules = {
             monday: [
-                { time: "07:00", title: "Хабар'" },
-                { time: "08:00 - 10:00", title: "Салом'" },
-                { time: "11:00", title: "Бузургон дар таърих'" },
-                { time: "14:00", title: "Савол ба ҳуқуқшинос'" },
-                { time: "17:00 - 19:00", title: "Шом ба хайр'" }
+                { time: "07:00", title: "Хабар" },
+                { time: "08:00 - 10:00", title: "Салом" },
+                { time: "11:00", title: "Бузургон дар таърих" },
+                { time: "14:00", title: "Савол ба ҳуқуқшинос" },
+                { time: "17:00 - 19:00", title: "Шом ба хайр" }
             ],
             tuesday: [
-                { time: "07:00", title: "Хабар'" },
-                { time: "08:00 - 10:00", title: "Салом'" },
+                { time: "07:00", title: "Хабар" },
+                { time: "08:00 - 10:00", title: "Салом" },
                 { time: "11:00", title: "Хазинаи маърифат" },
                 { time: "14:00 - 16:00", title: "Садои дил" },
-                { time: "17:00 - 19:00", title: "Шом ба хайр'" }
+                { time: "17:00 - 19:00", title: "Шом ба хайр" }
             ],
             wednesday: [
-                { time: "07:00", title: "Хабар'" },
-                { time: "08:00 - 10:00", title: "Салом'" },,
-                { time: "11:00", title: "Бузургон дар таърих'" },,
-                { time: "14:00, title: "Саломати'" },
-                { time: "17:00 - 19:00", title: "Шом ба хайр'" }
+                { time: "07:00", title: "Хабар" },
+                { time: "08:00 - 10:00", title: "Салом" },
+                { time: "11:00", title: "Бузургон дар таърих" },
+                { time: "14:00", title: "Саломати" },
+                { time: "17:00 - 19:00", title: "Шом ба хайр" }
             ],
             thursday: [
-                { time: "07:00", title: "Хабар'" },
-                { time: "08:00 - 10:00", title: "Салом'" },
+                { time: "07:00", title: "Хабар" },
+                { time: "08:00 - 10:00", title: "Салом" },
                 { time: "11:00", title: "Хазинаи маърифат" },
-                { time: "14:00", title: "Зан ва оила'" },
-                { time: "17:00 - 19:00", title: "Шом ба хайр'" }
+                { time: "14:00", title: "Зан ва оила" },
+                { time: "17:00 - 19:00", title: "Шом ба хайр" }
             ],
             friday: [
-                { time: "07:00", title: "Хабар'" },
-                { time: "08:00 - 10:00", title: "Салом'" },
-                { time: "11:00", title: "Хазинаи маърифат" },,
+                { time: "07:00", title: "Хабар" },
+                { time: "08:00 - 10:00", title: "Салом" },
+                { time: "11:00", title: "Хазинаи маърифат" },
                 { time: "14:00 - 16:00", title: "Садои дил" },
-                { time: "17:00 - 19:00", title: "Шом ба хайр'" 
+                { time: "17:00 - 19:00", title: "Шом ба хайр" }
             ],
             saturday: [
-                { time: "07:00", title: "Хабар'" },,
-                { time: "08:00 - 10:00", title: "Салом'" },
-                { time: "11:00", title: "Хазинаи маърифат" },,
-                { time: "14:00 - 16:00", title: "Садои дил" },,
-                { time: "17:00 - 19:00", title: "Шом ба хайр'"
+                { time: "07:00", title: "Хабар" },
+                { time: "08:00 - 10:00", title: "Салом" },
+                { time: "11:00", title: "Хазинаи маърифат" },
+                { time: "14:00 - 16:00", title: "Садои дил" },
+                { time: "17:00 - 19:00", title: "Шом ба хайр" }
             ],
             sunday: [
                 { time: "07:00 - 08:00", title: "Сурудхои шашмаком" },
                 { time: "10:00 - 11:00", title: "Сурудхои точики" },
                 { time: "11:00", title: "Саломати" },
                 { time: "17:00", title: "Савол ба ҳуқуқшинос" },
-                { time: "28:00 - 22:00", title: "Мусикихои форам'" }
+                { time: "20:00 - 22:00", title: "Мусикихои форам" }
             ]
         };
 
         // ========== ИНИЦИАЛИЗАЦИЯ ==========
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("Сайт загружается...");
             setupMenu();
             setupPlayer();
             setupLanguageSwitcher();
@@ -911,6 +911,7 @@
             setupDaySchedule();
             showDaySchedule('friday');
             showSection('main');
+            console.log("Сайт загружен успешно!");
         });
 
         // ========== МЕНЮ ==========
@@ -918,16 +919,19 @@
             menuBtn.addEventListener('click', () => {
                 sideMenu.classList.add('active');
                 overlay.classList.add('active');
+                console.log("Меню открыто");
             });
 
             overlay.addEventListener('click', () => {
                 sideMenu.classList.remove('active');
                 overlay.classList.remove('active');
+                console.log("Меню закрыто");
             });
 
             document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const section = item.getAttribute('data-section');
+                item.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    console.log("Выбран раздел:", section);
                     showSection(section);
                     sideMenu.classList.remove('active');
                     overlay.classList.remove('active');
@@ -936,6 +940,7 @@
         }
 
         function showSection(section) {
+            console.log("Показываем раздел:", section);
             document.querySelectorAll('.content-section').forEach(sec => {
                 sec.classList.remove('active');
             });
@@ -944,46 +949,63 @@
                 document.getElementById('mainContent').style.display = 'block';
             } else {
                 document.getElementById('mainContent').style.display = 'none';
-                document.getElementById(section + 'Section').classList.add('active');
+                const sectionElement = document.getElementById(section + 'Section');
+                if (sectionElement) {
+                    sectionElement.classList.add('active');
+                } else {
+                    console.error("Раздел не найден:", section);
+                }
             }
         }
 
         // ========== ПЛЕЕР ==========
         function setupPlayer() {
             playBtn.addEventListener('click', togglePlay);
+            console.log("Плеер инициализирован");
 
             radioStream.addEventListener('playing', () => {
+                console.log("Воспроизведение началось");
                 status.textContent = currentLang === 'ru' ? 'Слушаем Isfara FM...' : 'Исфара FM-ро мешунавем...';
                 status.style.background = 'rgba(255, 107, 53, 0.3)';
             });
 
             radioStream.addEventListener('waiting', () => {
+                console.log("Буферизация...");
                 status.textContent = currentLang === 'ru' ? 'Буферизация...' : 'Буфер карда истодааст...';
             });
 
-            radioStream.addEventListener('error', () => {
+            radioStream.addEventListener('error', (e) => {
+                console.error("Ошибка аудио:", e);
                 status.textContent = currentLang === 'ru' ? 'Ошибка подключения' : 'Пайваст нашуд';
                 isPlaying = false;
                 updatePlayerUI();
             });
 
             radioStream.addEventListener('ended', () => {
+                console.log("Воспроизведение завершено");
                 if (isPlaying) {
-                    setTimeout(() => radioStream.play(), 2000);
+                    setTimeout(() => {
+                        console.log("Пытаемся переподключиться...");
+                        radioStream.play();
+                    }, 2000);
                 }
             });
         }
 
         function togglePlay() {
+            console.log("Кнопка плеера нажата, текущий статус:", isPlaying);
             if (!isPlaying) {
+                console.log("Пытаемся начать воспроизведение...");
                 radioStream.play().then(() => {
+                    console.log("Воспроизведение успешно начато");
                     isPlaying = true;
                     updatePlayerUI();
                 }).catch(error => {
-                    console.error("Ошибка:", error);
+                    console.error("Ошибка воспроизведения:", error);
                     status.textContent = currentLang === 'ru' ? 'Ошибка подключения' : 'Пайваст нашуд';
                 });
             } else {
+                console.log("Ставим на паузу");
                 radioStream.pause();
                 isPlaying = false;
                 updatePlayerUI();
@@ -991,6 +1013,7 @@
         }
 
         function updatePlayerUI() {
+            console.log("Обновляем UI плеера, isPlaying:", isPlaying);
             if (isPlaying) {
                 playBtn.innerHTML = '<i class="fas fa-pause"></i><span>' + 
                     (currentLang === 'ru' ? 'Пауза' : 'Таваққуф') + '</span>';
@@ -1009,44 +1032,55 @@
 
         // ========== ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ ==========
         function setupLanguageSwitcher() {
+            console.log("Инициализация переключателя языков");
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const lang = this.getAttribute('data-lang');
+                    console.log("Переключаем язык на:", lang);
                     switchLanguage(lang);
                 });
             });
         }
 
         function switchLanguage(lang) {
+            console.log("Смена языка на:", lang);
             currentLang = lang;
             
+            // Обновляем активную кнопку
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
             });
             
+            // Обновляем все тексты с data атрибутами
             document.querySelectorAll('[data-ru]').forEach(element => {
-                if (element.getAttribute(`data-${lang}`)) {
+                const newText = element.getAttribute(`data-${lang}`);
+                if (newText) {
                     if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        element.value = element.getAttribute(`data-${lang}`);
+                        element.value = newText;
                     } else {
-                        element.textContent = element.getAttribute(`data-${lang}`);
+                        element.textContent = newText;
                     }
                 }
             });
             
+            // Обновляем статус плеера
             if (isPlaying) {
                 status.textContent = lang === 'ru' ? 'Слушаем Isfara FM...' : 'Исфара FM-ро гӯш мекунем...';
             }
             
+            // Обновляем расписание
             updateScheduleLanguage();
         }
 
         // ========== ИНТЕРАКТИВНЫЕ КАРТОЧКИ ==========
         function setupInteractiveCards() {
+            console.log("Инициализация интерактивных карточек");
             document.querySelectorAll('.interactive-card').forEach(card => {
                 card.addEventListener('click', function() {
+                    console.log("Клик по карточке:", this.querySelector('h3').textContent);
                     this.classList.toggle('active');
                     
+                    // Закрываем другие карточки
                     document.querySelectorAll('.interactive-card').forEach(otherCard => {
                         if (otherCard !== this && otherCard.classList.contains('active')) {
                             otherCard.classList.remove('active');
@@ -1058,24 +1092,38 @@
 
         // ========== РАСПИСАНИЕ ПО ДНЯМ ==========
         function setupDaySchedule() {
+            console.log("Инициализация расписания по дням");
             document.querySelectorAll('.day-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const day = this.getAttribute('data-day');
+                    console.log("Выбран день:", day);
                     
+                    // Обновляем активную кнопку
                     document.querySelectorAll('.day-btn').forEach(b => {
                         b.classList.remove('active');
                     });
                     this.classList.add('active');
                     
+                    // Показываем расписание
                     showDaySchedule(day);
                 });
             });
         }
 
         function showDaySchedule(day) {
+            console.log("Показываем расписание для дня:", day);
             const container = document.getElementById('schedules-container');
             const schedule = schedules[day];
             const dayName = document.querySelector(`[data-day="${day}"]`).getAttribute(`data-${currentLang}`);
+            
+            if (!schedule) {
+                console.error("Расписание не найдено для дня:", day);
+                container.innerHTML = `<div class="day-schedule active">
+                    <h3 class="day-title">${dayName}</h3>
+                    <p>Расписание временно недоступно</p>
+                </div>`;
+                return;
+            }
             
             let html = `<div class="day-schedule active">
                 <h3 class="day-title">${dayName}</h3>
@@ -1093,12 +1141,18 @@
         }
 
         function updateScheduleLanguage() {
+            console.log("Обновляем язык расписания");
             const activeDayBtn = document.querySelector('.day-btn.active');
             if (activeDayBtn) {
                 const day = activeDayBtn.getAttribute('data-day');
                 showDaySchedule(day);
             }
         }
+
+        // ========== ОБРАБОТЧИК ОШИБОК ==========
+        window.addEventListener('error', function(e) {
+            console.error("Глобальная ошибка:", e.message, "в", e.filename, "строка", e.lineno);
+        });
     </script>
 </body>
 </html>
