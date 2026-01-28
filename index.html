@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isfara FM - Радио Исфара</title>
+    <title>Isfara FM - 93.9FM РАДИОИ ИСФАРА</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -13,12 +13,61 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        :root {
+            --primary: #8A2BE2;
+            --secondary: #4B0082;
+            --accent: #FF6B35;
+            --accent-hover: #FF8C42;
+            --text: #FFFFFF;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --shadow: rgba(0, 0, 0, 0.2);
+        }
+
         body {
-            background: linear-gradient(135deg, #0c2461, #1e3799);
-            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
             padding-bottom: 80px;
+        }
+
+        /* Языковой переключатель */
+        .language-switcher {
+            position: absolute;
+            top: 15px;
+            right: 70px;
+            display: flex;
+            gap: 8px;
+            z-index: 101;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+        }
+
+        .flag-icon {
+            font-size: 16px;
         }
 
         /* Шапка */
@@ -27,10 +76,11 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(138, 43, 226, 0.4);
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .logo-container {
@@ -43,20 +93,23 @@
             height: 50px;
             width: 50px;
             border-radius: 50%;
-            object-fit: cover;
-            background-color: white;
-            padding: 3px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            object-fit: contain;
+            background: var(--accent);
+            padding: 5px;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.7);
         }
 
         .logo-text h1 {
             font-size: 20px;
-            color: #ff9f43;
+            color: var(--text);
+            text-shadow: 0 2px 4px var(--shadow);
         }
 
         .logo-text p {
             font-size: 12px;
-            opacity: 0.8;
+            opacity: 0.9;
+            color: #FFD700;
+            font-weight: bold;
         }
 
         /* Кнопка меню */
@@ -64,24 +117,19 @@
             font-size: 24px;
             background: none;
             border: none;
-            color: white;
+            color: var(--text);
             cursor: pointer;
             padding: 8px;
-            transition: transform 0.3s;
         }
 
-        .menu-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* Меню */
+        /* Боковое меню */
         .side-menu {
             position: fixed;
             top: 0;
             right: -300px;
             width: 280px;
             height: 100%;
-            background: rgba(15, 25, 70, 0.95);
+            background: rgba(75, 0, 130, 0.95);
             backdrop-filter: blur(15px);
             transition: right 0.4s ease;
             z-index: 1000;
@@ -96,15 +144,15 @@
         .menu-header {
             font-size: 22px;
             margin-bottom: 25px;
-            color: #ff9f43;
-            border-bottom: 2px solid #ff9f43;
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
         }
 
         .menu-item {
             padding: 15px;
             margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
@@ -115,12 +163,12 @@
         }
 
         .menu-item:hover {
-            background: rgba(255, 159, 67, 0.3);
+            background: rgba(255, 107, 53, 0.3);
             transform: translateX(-5px);
         }
 
         .menu-item i {
-            color: #ff9f43;
+            color: var(--accent);
             font-size: 20px;
         }
 
@@ -132,14 +180,11 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            display: none;
         }
 
         .overlay.active {
-            opacity: 1;
-            visibility: visible;
+            display: block;
         }
 
         /* Основной контент */
@@ -153,37 +198,36 @@
             text-align: center;
             margin: 20px auto;
             max-width: 600px;
-            transition: all 0.5s ease;
         }
 
         .radio-logo-large {
             width: 180px;
             height: 180px;
             border-radius: 20px;
-            object-fit: cover;
-            background-color: white;
-            padding: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            object-fit: contain;
+            background: var(--accent);
+            padding: 15px;
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
             margin: 0 auto 20px;
             display: block;
-            transition: all 0.5s ease;
         }
 
         .radio-title {
             font-size: 28px;
             margin-bottom: 10px;
-            color: #ff9f43;
-            transition: all 0.5s ease;
+            color: var(--text);
         }
 
-        .radio-subtitle {
-            font-size: 16px;
-            opacity: 0.9;
+        .radio-frequency {
+            font-size: 20px;
+            color: #FFD700;
+            font-weight: bold;
             margin-bottom: 30px;
-            line-height: 1.5;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
-        /* Кнопка плеера */
+        /* Кнопка плеера с анимацией */
         .player-container {
             width: 90%;
             max-width: 500px;
@@ -191,17 +235,16 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 5px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
+            box-shadow: 0 4px 20px var(--shadow);
         }
 
         .player-btn {
             width: 100%;
             height: 60px;
             border-radius: 20px;
-            background: white;
+            background: var(--accent);
             border: none;
-            color: #0c2461;
+            color: white;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
@@ -211,61 +254,53 @@
             justify-content: center;
             gap: 15px;
             padding: 0 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .player-btn.playing::before {
+            animation: shine 2s infinite;
         }
 
         .player-btn:hover {
-            background: #f8f9fa;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+            background: var(--accent-hover);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
+            transform: translateY(-2px);
         }
 
         .player-btn.playing {
-            background: linear-gradient(135deg, #ff9f43, #ff6b6b);
-            color: white;
+            background: linear-gradient(135deg, #FF4500, #FF6B35);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
         }
 
-        /* Анимация пульсации для кнопки */
-        @keyframes buttonPulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 159, 67, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
-        }
-
-        .player-btn.playing {
-            animation: buttonPulse 2s infinite;
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .player-btn i {
             font-size: 24px;
-            transition: transform 0.3s;
-        }
-
-        .player-btn:hover i {
-            transform: scale(1.1);
         }
 
         .status {
             font-size: 16px;
             margin-top: 15px;
             padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             border-radius: 50px;
             display: inline-block;
             min-width: 200px;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        /* Анимация точки в статусе */
-        @keyframes dotBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .status.playing::after {
-            content: ' ●';
-            color: #ff9f43;
-            animation: dotBlink 1s infinite;
-            margin-left: 5px;
         }
 
         /* Соцсети */
@@ -294,7 +329,6 @@
             transform: translateY(-5px) scale(1.1);
         }
 
-        /* Порядок соцсетей */
         .social-icon:nth-child(1) {
             background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
         }
@@ -308,8 +342,8 @@
             background: #FF0000;
         }
 
-        /* Дополнительный контент - 4 блока */
-        .extra-info {
+        /* Интерактивные блоки - 4 шт */
+        .interactive-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
@@ -317,44 +351,116 @@
             max-width: 1000px;
         }
 
-        .info-card {
-            background: rgba(255, 255, 255, 0.08);
+        .interactive-card {
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 20px;
             text-align: center;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .info-card:hover {
+        .interactive-card:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent);
         }
 
-        .info-card i {
-            font-size: 30px;
-            color: #ff9f43;
+        .interactive-card i {
+            font-size: 35px;
+            color: var(--accent);
             margin-bottom: 15px;
             transition: transform 0.3s;
         }
 
-        .info-card:hover i {
+        .interactive-card:hover i {
             transform: scale(1.2);
         }
 
-        .info-card h3 {
+        .interactive-card h3 {
             margin-bottom: 10px;
-            color: #ff9f43;
+            color: var(--text);
+            font-size: 20px;
         }
 
-        .info-card p {
-            font-size: 14px;
-            opacity: 0.9;
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
         }
 
-        /* Футер фиксированный */
+        .interactive-card.active .card-content {
+            max-height: 200px;
+        }
+
+        .no-content-msg {
+            padding: 15px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 10px;
+            color: #FFD700;
+            font-style: italic;
+            border: 1px dashed rgba(255, 107, 53, 0.5);
+        }
+
+        /* Расписание по дням */
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .day-btn {
+            padding: 12px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .day-btn:hover {
+            background: rgba(255, 107, 53, 0.3);
+        }
+
+        .day-btn.active {
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+        }
+
+        .day-schedule {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            animation: fadeIn 0.5s;
+        }
+
+        .day-schedule.active {
+            display: block;
+        }
+
+        .day-title {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 22px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        /* Футер */
         footer {
             position: fixed;
             bottom: 0;
@@ -362,12 +468,12 @@
             width: 100%;
             text-align: center;
             padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(138, 43, 226, 0.6);
             backdrop-filter: blur(10px);
             font-size: 14px;
             opacity: 0.9;
             z-index: 99;
-            transition: all 0.3s;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Секции контента */
@@ -385,44 +491,26 @@
 
         .section-title {
             font-size: 28px;
-            color: #ff9f43;
+            color: var(--accent);
             margin-bottom: 20px;
-            border-bottom: 2px solid #ff9f43;
+            border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
-            animation: slideIn 0.6s ease;
         }
 
         .program-list {
             list-style: none;
-            margin-top: 20px;
         }
 
         .program-item {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 10px;
-            border-left: 5px solid #ff9f43;
-            transition: all 0.3s;
-            animation: fadeInUp 0.5s ease backwards;
+            border-left: 5px solid var(--accent);
         }
-
-        .program-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-        }
-
-        .program-item:nth-child(1) { animation-delay: 0.1s; }
-        .program-item:nth-child(2) { animation-delay: 0.2s; }
-        .program-item:nth-child(3) { animation-delay: 0.3s; }
-        .program-item:nth-child(4) { animation-delay: 0.4s; }
-        .program-item:nth-child(5) { animation-delay: 0.5s; }
-        .program-item:nth-child(6) { animation-delay: 0.6s; }
-        .program-item:nth-child(7) { animation-delay: 0.7s; }
-        .program-item:nth-child(8) { animation-delay: 0.8s; }
 
         .program-time {
-            color: #ff9f43;
+            color: var(--accent);
             font-weight: bold;
             display: block;
             margin-bottom: 5px;
@@ -432,19 +520,18 @@
             display: inline-block;
             margin-top: 20px;
             padding: 15px 30px;
-            background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+            background: linear-gradient(135deg, var(--accent), #FF4500);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-size: 18px;
             font-weight: bold;
             transition: all 0.3s;
-            animation: fadeInUp 0.8s ease;
         }
 
         .support-link:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.4);
         }
 
         /* Анимации */
@@ -453,42 +540,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 107, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Эффект при воспроизведении */
-        .playing-mode .radio-info {
-            transform: scale(0.98);
-        }
-
-        .playing-mode .player-container {
-            background: rgba(255, 159, 67, 0.15);
-            box-shadow: 0 4px 25px rgba(255, 159, 67, 0.3);
-        }
-
-        .playing-mode .status {
-            background: rgba(255, 159, 67, 0.2);
-            color: #ff9f43;
+        .pulse {
+            animation: pulse 2s infinite;
         }
 
         /* Адаптивность */
         @media (max-width: 768px) {
-            .extra-info {
+            .interactive-grid {
                 grid-template-columns: 1fr;
+            }
+            .days-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
             .radio-logo-large {
                 width: 150px;
                 height: 150px;
             }
-            .radio-title {
-                font-size: 24px;
+            .language-switcher {
+                top: 10px;
+                right: 60px;
             }
         }
 
@@ -496,28 +572,37 @@
             .player-btn {
                 height: 55px;
                 font-size: 16px;
-                padding: 0 20px;
             }
             footer {
                 font-size: 12px;
                 padding: 12px 15px;
             }
-            .social-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
+            .days-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
+    <!-- Языковой переключатель -->
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="ru">
+            <span class="flag-icon">🇷🇺</span>
+            <span>RU</span>
+        </button>
+        <button class="lang-btn" data-lang="tj">
+            <span class="flag-icon">🇹🇯</span>
+            <span>TJ</span>
+        </button>
+    </div>
+
     <!-- Шапка -->
     <header>
         <div class="logo-container">
             <img src="https://i.ibb.co/cV8LHHh/photo-2024-06-15-20-41-32.jpg" alt="Isfara FM Logo" class="logo">
             <div class="logo-text">
                 <h1>Isfara FM</h1>
-                <p>Голос города Исфара</p>
+                <p class="radio-frequency" data-ru="93.9FM" data-tj="93.9FM">93.9FM</p>
             </div>
         </div>
         <button class="menu-btn" id="menuBtn">
@@ -527,26 +612,22 @@
 
     <!-- Боковое меню -->
     <div class="side-menu" id="sideMenu">
-        <div class="menu-header">Меню</div>
+        <div class="menu-header" data-ru="Меню" data-tj="Меню">Меню</div>
         <div class="menu-item" data-section="main">
             <i class="fas fa-home"></i>
-            <span>Главная</span>
+            <span data-ru="Главная" data-tj="Асосӣ">Главная</span>
         </div>
         <div class="menu-item" data-section="programs">
             <i class="fas fa-tv"></i>
-            <span>Программы</span>
+            <span data-ru="Программы" data-tj="Барномаҳо">Программы</span>
         </div>
         <div class="menu-item" data-section="about">
             <i class="fas fa-info-circle"></i>
-            <span>О радио</span>
+            <span data-ru="О радио" data-tj="Дар бораи радио">О радио</span>
         </div>
         <div class="menu-item" data-section="support">
             <i class="fas fa-headset"></i>
-            <span>Техподдержка</span>
-        </div>
-        <div class="menu-item" data-section="version">
-            <i class="fas fa-code"></i>
-            <span>Версия приложения</span>
+            <span data-ru="Техподдержка" data-tj="Дастгирии техникӣ">Техподдержка</span>
         </div>
     </div>
     <div class="overlay" id="overlay"></div>
@@ -554,18 +635,18 @@
     <!-- Главный экран -->
     <div class="main-content" id="mainContent">
         <div class="radio-info">
-            <img src="https://i.ibb.co/cV8LHHh/photo-2024-06-15-20-41-32.jpg" alt="Isfara FM" class="radio-logo-large" id="mainLogo">
-            <h1 class="radio-title">Isfara FM</h1>
-            <p class="radio-subtitle">Вещаем на частоте 104.5 FM. Лучшая музыка, новости и развлечения для города Исфара и всего Согдийской области.</p>
+            <img src="https://i.ibb.co/cV8LHHh/photo-2024-06-15-20-41-32.jpg" alt="Isfara FM" class="radio-logo-large pulse" id="mainLogo">
+            <h1 class="radio-title" data-ru="Isfara FM" data-tj="Исфара FM">Isfara FM</h1>
+            <p class="radio-frequency">93.9FM</p>
             
             <div class="player-container">
                 <button class="player-btn" id="playBtn">
                     <i class="fas fa-play"></i>
-                    <span>Слушать радио онлайн</span>
+                    <span data-ru="Слушать радио онлайн" data-tj="Радиоро онлайн гӯш кунед">Слушать радио онлайн</span>
                 </button>
             </div>
             
-            <div class="status" id="status">Готово к воспроизведению</div>
+            <div class="status" id="status" data-ru="Готово к воспроизведению" data-tj="Барои пахш кардан омода аст">Готово к воспроизведению</div>
             
             <div class="social-container">
                 <a href="https://instagram.com/isfarafm" class="social-icon" target="_blank">
@@ -582,301 +663,385 @@
                 </a>
             </div>
             
-            <!-- 4 информационных блока -->
-            <div class="extra-info">
-                <div class="info-card">
-                    <i class="fas fa-music"></i>
-                    <h3>Лучшая музыка</h3>
-                    <p>Таджикские, русские и мировые хиты 24/7 без перерыва</p>
-                </div>
-                <div class="info-card">
+            <!-- 4 интерактивных блока -->
+            <div class="interactive-grid">
+                <div class="interactive-card" data-content="news">
                     <i class="fas fa-newspaper"></i>
-                    <h3>Свежие новости</h3>
-                    <p>Последние новости Исфары, Согдийской области и Таджикистана</p>
+                    <h3 data-ru="Свежие новости" data-tj="Навигариҳои тоза">Свежие новости</h3>
+                    <div class="card-content">
+                        <div class="no-content-msg" data-ru="Тут пока нет новостей, но скоро будут!" data-tj="Дар ҳоли ҳазор навигариҳо нест, аммо ба зудӣ хоҳад буд!">
+                            Тут пока нет новостей, но скоро будут!
+                        </div>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <i class="fas fa-broadcast-tower"></i>
-                    <h3>Прямой эфир</h3>
-                    <p>Интерактивные программы с ведущими и гостями</p>
+                
+                <div class="interactive-card" data-content="music">
+                    <i class="fas fa-music"></i>
+                    <h3 data-ru="Лучшая музыка" data-tj="Беҳтарин мусиқӣ">Лучшая музыка</h3>
+                    <div class="card-content">
+                        <div class="no-content-msg" data-ru="Скоро появится плейлист и чарты!" data-tj="Ба зудӣ плейлист ва ҷадвалҳо пайдо мешаванд!">
+                            Скоро появится плейлист и чарты!
+                        </div>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Для всей семьи</h3>
-                    <p>Программы для детей, молодёжи и старшего поколения</p>
+                
+                <div class="interactive-card" data-content="schedule">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3 data-ru="Расписание" data-tj="Ҷадвали барномаҳо">Расписание</h3>
+                    <div class="card-content">
+                        <div class="no-content-msg" data-ru="Полное расписание в разделе 'Программы'" data-tj="Ҷадвали пурра дар бахши 'Барномаҳо'">
+                            Полное расписание в разделе 'Программы'
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="interactive-card" data-content="events">
+                    <i class="fas fa-star"></i>
+                    <h3 data-ru="События" data-tj="Ҳодисаҳо">События</h3>
+                    <div class="card-content">
+                        <div class="no-content-msg" data-ru="Информация о предстоящих событиях скоро появится!" data-tj="Маълумот дар бораи ҳодисаҳои оянда ба зудӣ пайдо мешавад!">
+                            Информация о предстоящих событиях скоро появится!
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Секция "Программы" -->
+    <!-- Секция "Программы" с днями недели -->
     <div class="content-section" id="programsSection">
-        <h2 class="section-title">Программы Isfara FM</h2>
-        <p>Ежедневное расписание передач:</p>
-        <ul class="program-list">
-            <li class="program-item">
-                <span class="program-time">06:00 - 10:00</span>
-                Утреннее шоу "С добрым утром, Исфара!"
-            </li>
-            <li class="program-item">
-                <span class="program-time">10:00 - 14:00</span>
-                Музыкальный марафон "Хиты Таджикистана"
-            </li>
-            <li class="program-item">
-                <span class="program-time">14:00 - 16:00</span>
-                Новости и аналитика "Исфара сегодня"
-            </li>
-            <li class="program-item">
-                <span class="program-time">16:00 - 18:00</span>
-                Вечернее шоу "После работы"
-            </li>
-            <li class="program-item">
-                <span class="program-time">18:00 - 20:00</span>
-                Молодёжная программа "Новое поколение"
-            </li>
-            <li class="program-item">
-                <span class="program-time">20:00 - 22:00</span>
-                Ретро вечер "Ностальгия"
-            </li>
-            <li class="program-item">
-                <span class="program-time">22:00 - 00:00</span>
-                Ночная волна "Тихие мелодии"
-            </li>
-            <li class="program-item">
-                <span class="program-time">00:00 - 06:00</span>
-                Автоматическое вещание
-            </li>
-        </ul>
+        <h2 class="section-title" data-ru="Программы" data-tj="Барномаҳо">Программы</h2>
+        
+        <div class="days-grid">
+            <button class="day-btn" data-day="monday" data-ru="Понедельник" data-tj="Душанбе">Понедельник</button>
+            <button class="day-btn" data-day="tuesday" data-ru="Вторник" data-tj="Сешанбе">Вторник</button>
+            <button class="day-btn" data-day="wednesday" data-ru="Среда" data-tj="Чоршанбе">Среда</button>
+            <button class="day-btn" data-day="thursday" data-ru="Четверг" data-tj="Панҷшанбе">Четверг</button>
+            <button class="day-btn" data-day="friday" data-ru="Пятница" data-tj="Ҷумъа">Пятница</button>
+            <button class="day-btn" data-day="saturday" data-ru="Суббота" data-tj="Шанбе">Суббота</button>
+            <button class="day-btn" data-day="sunday" data-ru="Воскресенье" data-tj="Якшанбе">Воскресенье</button>
+        </div>
+
+        <!-- Программы по дням -->
+        <div id="schedules-container">
+            <!-- Контент будет генерироваться JavaScript -->
+        </div>
     </div>
 
     <!-- Секция "О радио" -->
     <div class="content-section" id="aboutSection">
-        <h2 class="section-title">О радиостанции</h2>
-        <p><strong>Isfara FM</strong> — первая и ведущая радиостанция города Исфара, вещающая с 2010 года.</p>
-        <p>Наша миссия — быть голосом города, объединять жителей и предоставлять качественный контент.</p>
-        
-        <h3 style="margin: 25px 0 15px; color: #ff9f43;">Наши преимущества:</h3>
-        <ul class="program-list">
-            <li>✓ 24/7 вещание без перерывов</li>
-            <li>✓ Прямые эфиры с важнейших городских событий</li>
-            <li>✓ Эксклюзивные интервью с известными людьми региона</li>
-            <li>✓ Интерактивные конкурсы и викторины</li>
-            <li>✓ Техническая поддержка от <strong>Kurush Digital</strong></li>
-        </ul>
-        
-        <h3 style="margin: 25px 0 15px; color: #ff9f43;">Контакты радиостанции:</h3>
-        <p>📍 Адрес: г. Исфара, ул. Центральная, 123</p>
-        <p>📞 Телефон: +992 (3462) 5-10-10</p>
-        <p>📧 Email: info@isfarafm.com</p>
+        <h2 class="section-title" data-ru="О радио" data-tj="Дар бораи радио">О радио</h2>
+        <p data-ru="Isfara FM — первая и ведущая радиостанция города Исфара, вещающая с 2010 года." data-tj="Исфара FM — аввалин ва пешбари радиостансияи шаҳри Исфара, аз соли 2010 пахш мекунад.">
+            Isfara FM — первая и ведущая радиостанция города Исфара, вещающая с 2010 года.
+        </p>
+        <p data-ru="Наша миссия — быть голосом города, объединять жителей и предоставлять качественный контент." data-tj="Мақсади мо — овози шаҳр будан, муттаҳид кардани аҳолӣ ва таъмин кардани мундариҷаи сифатӣ.">
+            Наша миссия — быть голосом города, объединять жителей и предоставлять качественный контент.
+        </p>
     </div>
 
     <!-- Секция "Техподдержка" -->
     <div class="content-section" id="supportSection">
-        <h2 class="section-title">Техническая поддержка</h2>
-        <p>Если у вас возникли проблемы с приложением или есть предложения по улучшению:</p>
-        
-        <div style="margin: 30px 0; padding: 20px; background: rgba(255, 159, 67, 0.1); border-radius: 15px;">
-            <p style="font-size: 18px; margin-bottom: 10px;"><strong>Разработчик приложения:</strong></p>
-            <p style="font-size: 22px; color: #ff9f43; font-weight: bold;">Kurush Digital</p>
+        <h2 class="section-title" data-ru="Техническая поддержка" data-tj="Дастгирии техникӣ">Техническая поддержка</h2>
+        <p data-ru="Разработчик приложения:" data-tj="Таҳиягари барнома:">Разработчик приложения:</p>
+        <div style="margin: 20px 0; padding: 15px; background: rgba(255, 107, 53, 0.1); border-radius: 10px;">
+            <p style="font-size: 22px; color: #FF6B35; font-weight: bold;">Kurush Digital</p>
         </div>
         
         <a href="https://t.me/KurushD_bot" class="support-link" target="_blank">
-            <i class="fab fa-telegram"></i> Написать в поддержку
+            <i class="fab fa-telegram"></i>
+            <span data-ru="Написать в поддержку (Telegram бот)" data-tj="Ба дастгирӣ нависед (Telegram бот)">Написать в поддержку (Telegram бот)</span>
         </a>
-        
-        <p style="margin-top: 30px; font-size: 16px;">Или свяжитесь другими способами:</p>
-        <p>📧 Email: support@kurushdigital.com</p>
-        <p>📞 Сайт: kurushdigital.com</p>
-    </div>
-
-    <!-- Секция "Версия" -->
-    <div class="content-section" id="versionSection">
-        <h2 class="section-title">Версия приложения</h2>
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px;">
-            <p style="font-size: 20px; margin-bottom: 10px;"><strong>Isfara FM Radio Player</strong></p>
-            <p>Версия: <strong>1.0.0</strong> (Release)</p>
-            <p>Дата сборки: <strong>Январь 2026</strong></p>
-            <p>Тип лицензии: <strong>Бесплатная</strong></p>
-            <p>Поддерживаемые ОС: <strong>Android 8.0+</strong></p>
-            <p>Размер приложения: <strong>~50 MB</strong></p>
-        </div>
     </div>
 
     <!-- Футер -->
     <footer>
-        <p>© 2024 Радиостанция "Isfara FM". Все права защищены.</p>
+        <p data-ru="© 2024 Радиостанция 'Isfara FM'. Все права защищены." data-tj="© 2024 Радиостансия 'Исфара FM'. Ҳама ҳуқуқҳо ҳифз шудаанд.">
+            © 2024 Радиостанция "Isfara FM". Все права защищены.
+        </p>
     </footer>
 
-    <!-- Аудио элемент с вашим потоком -->
+    <!-- Аудио элемент -->
     <audio id="radioStream" preload="none">
         <source src="https://c34.radioboss.fm:8880/stream" type="audio/mpeg">
         Ваш браузер не поддерживает аудио элемент.
     </audio>
 
     <script>
-        // Элементы DOM
+        // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
         const playBtn = document.getElementById('playBtn');
         const radioStream = document.getElementById('radioStream');
         const status = document.getElementById('status');
-        const body = document.body;
-        
-        // Переменные состояния
+        const mainLogo = document.getElementById('mainLogo');
         let isPlaying = false;
-        let currentSection = 'main';
+        let currentLang = 'ru';
 
-        // Анимация открытия/закрытия меню
-        menuBtn.addEventListener('click', () => {
-            sideMenu.classList.add('active');
-            overlay.classList.add('active');
-            menuBtn.style.transform = 'rotate(90deg)';
+        // ========== ДАННЫЕ ПРОГРАММ ПО ДНЯМ ==========
+        const schedules = {
+            monday: [
+                { time: "06:00 - 10:00", title: "Утреннее шоу 'С добрым утром, Исфара!'" },
+                { time: "10:00 - 14:00", title: "Музыкальный марафон 'Хиты Таджикистана'" },
+                { time: "14:00 - 16:00", title: "Новости и аналитика 'Исфара сегодня'" },
+                { time: "16:00 - 18:00", title: "Вечернее шоу 'После работы'" },
+                { time: "18:00 - 20:00", title: "Молодёжная программа 'Новое поколение'" }
+            ],
+            tuesday: [
+                { time: "06:00 - 10:00", title: "Утреннее шоу 'С добрым утром, Исфара!'" },
+                { time: "10:00 - 14:00", title: "Музыкальные хиты 80-90х" },
+                { time: "14:00 - 16:00", title: "Интервью с известными людьми города" },
+                { time: "16:00 - 18:00", title: "Спортивные новости" },
+                { time: "18:00 - 20:00", title: "Музыка по заявкам" }
+            ],
+            wednesday: [
+                { time: "06:00 - 10:00", title: "Утреннее шоу 'С добрым утром, Исфара!'" },
+                { time: "10:00 - 14:00", title: "Таджикская классическая музыка" },
+                { time: "14:00 - 16:00", title: "Образовательная программа" },
+                { time: "16:00 - 18:00", title: "Детская программа 'Солнечный город'" },
+                { time: "18:00 - 20:00", title: "Вечер поэзии" }
+            ],
+            thursday: [
+                { time: "06:00 - 10:00", title: "Утреннее шоу 'С добрым утром, Исфара!'" },
+                { time: "10:00 - 14:00", title: "Международные хиты" },
+                { time: "14:00 - 16:00", title: "Культурные события недели" },
+                { time: "16:00 - 18:00", title: "Авторская программа 'Городские истории'" },
+                { time: "18:00 - 20:00", title: "Музыкальный клуб" }
+            ],
+            friday: [
+                { time: "06:00 - 10:00", title: "Утреннее шоу 'С добрым утром, Исфара!'" },
+                { time: "10:00 - 14:00", title: "Пятничный музыкальный микс" },
+                { time: "14:00 - 16:00", title: "Подготовка к выходным" },
+                { time: "16:00 - 18:00", title: "Развлекательное шоу" },
+                { time: "18:00 - 20:00", title: "Танцевальная музыка" }
+            ],
+            saturday: [
+                { time: "08:00 - 12:00", title: "Субботнее утро с легкой музыкой" },
+                { time: "12:00 - 16:00", title: "Семейная программа" },
+                { time: "16:00 - 18:00", title: "Музыка для отдыха" },
+                { time: "18:00 - 20:00", title: "Вечер встречи" },
+                { time: "20:00 - 22:00", title: "Ретро вечер 'Ностальгия'" }
+            ],
+            sunday: [
+                { time: "08:00 - 12:00", title: "Воскресное утро" },
+                { time: "12:00 - 16:00", title: "Духовная музыка и беседы" },
+                { time: "16:00 - 18:00", title: "Подведение итогов недели" },
+                { time: "18:00 - 20:00", title: "Музыка для души" },
+                { time: "20:00 - 22:00", title: "Ночная волна 'Тихие мелодии'" }
+            ]
+        };
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            setupMenu();
+            setupPlayer();
+            setupLanguageSwitcher();
+            setupInteractiveCards();
+            setupDaySchedule();
+            showDaySchedule('monday');
+            showSection('main');
         });
 
-        overlay.addEventListener('click', () => {
-            sideMenu.classList.remove('active');
-            overlay.classList.remove('active');
-            menuBtn.style.transform = 'rotate(0deg)';
-        });
+        // ========== МЕНЮ ==========
+        function setupMenu() {
+            menuBtn.addEventListener('click', () => {
+                sideMenu.classList.add('active');
+                overlay.classList.add('active');
+            });
 
-        // Переключение секций с анимацией
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const section = item.getAttribute('data-section');
-                showSection(section);
+            overlay.addEventListener('click', () => {
                 sideMenu.classList.remove('active');
                 overlay.classList.remove('active');
-                menuBtn.style.transform = 'rotate(0deg)';
             });
-        });
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const section = item.getAttribute('data-section');
+                    showSection(section);
+                    sideMenu.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            });
+        }
 
         function showSection(section) {
-            // Скрыть все секции
             document.querySelectorAll('.content-section').forEach(sec => {
                 sec.classList.remove('active');
             });
             
-            // Показать главный экран или секцию
             if (section === 'main') {
                 document.getElementById('mainContent').style.display = 'block';
-                currentSection = 'main';
-                body.classList.remove('playing-mode');
             } else {
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById(section + 'Section').classList.add('active');
-                currentSection = section;
-                body.classList.remove('playing-mode');
             }
         }
 
-        // Управление плеером с анимациями
-        playBtn.addEventListener('click', togglePlay);
+        // ========== ПЛЕЕР ==========
+        function setupPlayer() {
+            playBtn.addEventListener('click', togglePlay);
+
+            radioStream.addEventListener('playing', () => {
+                status.textContent = currentLang === 'ru' ? 'Слушаем Isfara FM...' : 'Исфара FM-ро гӯш мекунем...';
+                status.style.background = 'rgba(255, 107, 53, 0.3)';
+            });
+
+            radioStream.addEventListener('waiting', () => {
+                status.textContent = currentLang === 'ru' ? 'Буферизация...' : 'Буфер карда истодааст...';
+            });
+
+            radioStream.addEventListener('error', () => {
+                status.textContent = currentLang === 'ru' ? 'Ошибка подключения' : 'Хатои пайвастшавӣ';
+                isPlaying = false;
+                updatePlayerUI();
+            });
+
+            radioStream.addEventListener('ended', () => {
+                if (isPlaying) {
+                    setTimeout(() => radioStream.play(), 2000);
+                }
+            });
+        }
 
         function togglePlay() {
             if (!isPlaying) {
-                // Запуск воспроизведения
                 radioStream.play().then(() => {
                     isPlaying = true;
-                    playBtn.innerHTML = '<i class="fas fa-pause"></i><span>Пауза</span>';
-                    playBtn.classList.add('playing');
-                    status.textContent = 'Слушаем Isfara FM';
-                    status.classList.add('playing');
-                    
-                    // Включаем режим воспроизведения
-                    body.classList.add('playing-mode');
-                    
-                    // Анимация иконки
-                    const icon = playBtn.querySelector('i');
-                    icon.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        icon.style.transform = 'scale(1)';
-                    }, 300);
-                    
+                    updatePlayerUI();
                 }).catch(error => {
-                    console.error("Ошибка воспроизведения:", error);
-                    status.textContent = 'Ошибка подключения. Проверьте интернет.';
-                    status.style.background = 'rgba(255, 50, 50, 0.3)';
-                    
-                    // Пробуем переподключиться
-                    setTimeout(() => {
-                        status.textContent = 'Пробуем переподключиться...';
-                        radioStream.play();
-                    }, 3000);
+                    console.error("Ошибка:", error);
+                    status.textContent = currentLang === 'ru' ? 'Ошибка подключения' : 'Хатои пайвастшавӣ';
                 });
             } else {
-                // Пауза
                 radioStream.pause();
                 isPlaying = false;
-                playBtn.innerHTML = '<i class="fas fa-play"></i><span>Слушать радио онлайн</span>';
-                playBtn.classList.remove('playing');
-                status.textContent = 'Пауза';
-                status.classList.remove('playing');
-                body.classList.remove('playing-mode');
-                
-                // Анимация иконки
-                const icon = playBtn.querySelector('i');
-                icon.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    icon.style.transform = 'scale(1)';
-                }, 300);
+                updatePlayerUI();
             }
         }
 
-        // Обработчики событий аудио
-        radioStream.addEventListener('playing', () => {
-            status.textContent = 'Слушаем Isfara FM';
-            status.classList.add('playing');
-        });
-
-        radioStream.addEventListener('waiting', () => {
-            status.textContent = 'Буферизация...';
-            status.classList.remove('playing');
-        });
-
-        radioStream.addEventListener('error', () => {
-            status.textContent = 'Ошибка подключения';
-            status.style.background = 'rgba(255, 50, 50, 0.3)';
-            status.classList.remove('playing');
-            isPlaying = false;
-            playBtn.innerHTML = '<i class="fas fa-play"></i><span>Слушать радио онлайн</span>';
-            playBtn.classList.remove('playing');
-            body.classList.remove('playing-mode');
-        });
-
-        // Авто-переподключение
-        radioStream.addEventListener('ended', () => {
+        function updatePlayerUI() {
             if (isPlaying) {
-                setTimeout(() => {
-                    status.textContent = 'Переподключение...';
-                    radioStream.play();
-                }, 2000);
+                playBtn.innerHTML = '<i class="fas fa-pause"></i><span>' + 
+                    (currentLang === 'ru' ? 'Пауза' : 'Таваққуф') + '</span>';
+                playBtn.classList.add('playing');
+                mainLogo.classList.add('pulse');
+                status.style.background = 'rgba(255, 107, 53, 0.3)';
+            } else {
+                playBtn.innerHTML = '<i class="fas fa-play"></i><span>' + 
+                    (currentLang === 'ru' ? 'Слушать радио онлайн' : 'Радиоро онлайн гӯш кунед') + '</span>';
+                playBtn.classList.remove('playing');
+                mainLogo.classList.remove('pulse');
+                status.style.background = 'rgba(255, 255, 255, 0.1)';
+                status.textContent = currentLang === 'ru' ? 'Готово к воспроизведению' : 'Барои пахш кардан омода аст';
             }
-        });
+        }
 
-        // Плавный скролл для якорей
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+        // ========== ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ ==========
+        function setupLanguageSwitcher() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    switchLanguage(lang);
+                });
+            });
+        }
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            
+            // Обновляем активную кнопку
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+            
+            // Обновляем все тексты с data атрибутами
+            document.querySelectorAll('[data-ru]').forEach(element => {
+                if (element.getAttribute(`data-${lang}`)) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.value = element.getAttribute(`data-${lang}`);
+                    } else {
+                        element.textContent = element.getAttribute(`data-${lang}`);
+                    }
                 }
             });
-        });
+            
+            // Обновляем статус плеера
+            if (isPlaying) {
+                status.textContent = lang === 'ru' ? 'Слушаем Isfara FM...' : 'Исфара FM-ро гӯш мекунем...';
+            }
+            
+            // Обновляем расписание
+            updateScheduleLanguage();
+        }
 
-        // Инициализация
-        showSection('main');
-        
-        // Небольшая задержка для плавного появления
-        setTimeout(() => {
-            document.body.style.opacity = '1';
-        }, 100);
+        // ========== ИНТЕРАКТИВНЫЕ КАРТОЧКИ ==========
+        function setupInteractiveCards() {
+            document.querySelectorAll('.interactive-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    
+                    // Закрываем другие карточки
+                    document.querySelectorAll('.interactive-card').forEach(otherCard => {
+                        if (otherCard !== this && otherCard.classList.contains('active')) {
+                            otherCard.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // ========== РАСПИСАНИЕ ПО ДНЯМ ==========
+        function setupDaySchedule() {
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const day = this.getAttribute('data-day');
+                    
+                    // Обновляем активную кнопку
+                    document.querySelectorAll('.day-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Показываем расписание
+                    showDaySchedule(day);
+                });
+            });
+        }
+
+        function showDaySchedule(day) {
+            const container = document.getElementById('schedules-container');
+            const schedule = schedules[day];
+            const dayName = document.querySelector(`[data-day="${day}"]`).getAttribute(`data-${currentLang}`);
+            
+            let html = `<div class="day-schedule active">
+                <h3 class="day-title">${dayName}</h3>
+                <ul class="program-list">`;
+            
+            schedule.forEach(item => {
+                html += `<li class="program-item">
+                    <span class="program-time">${item.time}</span>
+                    ${item.title}
+                </li>`;
+            });
+            
+            html += `</ul></div>`;
+            container.innerHTML = html;
+        }
+
+        function updateScheduleLanguage() {
+            const activeDayBtn = document.querySelector('.day-btn.active');
+            if (activeDayBtn) {
+                const day = activeDayBtn.getAttribute('data-day');
+                showDaySchedule(day);
+            }
+        }
+
+        // ========== АВТОЗАПУСК (опционально) ==========
+        // setTimeout(() => {
+        //     if (!isPlaying) {
+        //         togglePlay();
+        //     }
+        // }, 1000);
     </script>
 </body>
 </html>
