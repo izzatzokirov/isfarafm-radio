@@ -1160,3 +1160,340 @@
     </script>
 </body>
 </html>
+/* =============================================
+   KURUSH DIGITAL - MODERN REDESIGN
+   Дополнение к существующим стилям
+   Не меняет структуру, только улучшает внешний вид
+============================================= */
+
+/* --- 1. ОСНОВНЫЕ ПЕРЕМЕННЫЕ (дополняем твою палитру) --- */
+:root {
+  /* Существующие цвета остаются, добавляем новые для эффектов */
+  --glass-bg: rgba(15, 15, 15, 0.7); /* Основной цвет для стекла */
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --primary-glow: rgba(255, 140, 0, 0.4); /* Оранжевое свечение под бренд */
+  --animation-play: running;
+}
+
+/* --- 2. ЭФФЕКТ ЖИДКОГО СТЕКЛА (APPLE STYLE) --- */
+.glass-effect {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(15px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+/* Применяем к основным блокам */
+header, .now-playing, .download-section, .contact-section, footer {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* --- 3. АНИМАЦИЯ ДЛЯ ВКЛЮЧЁННОГО РАДИО --- */
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 10px var(--primary-glow); }
+  50% { box-shadow: 0 0 25px var(--primary-glow); }
+  100% { box-shadow: 0 0 10px var(--primary-glow); }
+}
+
+@keyframes audio-wave {
+  0% { transform: scaleY(1); }
+  25% { transform: scaleY(1.5); }
+  50% { transform: scaleY(0.8); }
+  75% { transform: scaleY(1.2); }
+  100% { transform: scaleY(1); }
+}
+
+/* Когда радио играет, добавляем класс .playing к кнопке */
+.play-btn.playing {
+  animation: pulse-glow 2s infinite ease-in-out !important;
+  position: relative;
+}
+
+/* Визуализация звуковых волн (опционально) */
+.audio-waves {
+  display: none;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 15px;
+  height: 30px;
+}
+
+.audio-waves.active {
+  display: flex;
+}
+
+.wave-bar {
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to top, #ff8c00, #ffaa44);
+  border-radius: 2px;
+  animation: audio-wave 1.4s infinite ease-in-out;
+}
+
+.wave-bar:nth-child(2) { animation-delay: 0.2s; }
+.wave-bar:nth-child(3) { animation-delay: 0.4s; }
+.wave-bar:nth-child(4) { animation-delay: 0.6s; }
+.wave-bar:nth-child(5) { animation-delay: 0.8s; }
+
+/* --- 4. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ --- */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-animate {
+  opacity: 0;
+  animation: fade-up 0.8s ease forwards;
+}
+
+/* Задержки для последовательного появления */
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+
+/* --- 5. УЛУЧШЕНИЕ СУЩЕСТВУЮЩИХ ЭЛЕМЕНТОВ --- */
+
+/* Хедер с эффектом стекла */
+.site-header {
+  padding: 15px 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Логотип - делаем заметнее */
+.logo {
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)) !important;
+  transition: all 0.3s ease !important;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 2px 10px rgba(255, 140, 0, 0.3)) !important;
+}
+
+/* Главный блок с радио */
+.hero {
+  padding: 60px 20px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Фон с градиентом для глубины */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 140, 0, 0.1) 0%, transparent 50%);
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Кнопка Play/Pause - современный вид */
+.play-btn {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: linear-gradient(135deg, #ff8c00, #ff6b00) !important;
+  color: white !important;
+  font-size: 28px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 20px auto !important;
+}
+
+.play-btn:hover {
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.4) !important;
+}
+
+/* Блок "Сейчас играет" */
+.now-playing {
+  padding: 25px !important;
+  margin: 25px auto !important;
+  max-width: 600px !important;
+  text-align: center !important;
+}
+
+.song-title {
+  font-size: 1.4rem !important;
+  font-weight: 600 !important;
+  color: white !important;
+  margin-bottom: 10px !important;
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Ползунки громкости - стилизуем */
+.controls input[type="range"] {
+  -webkit-appearance: none !important;
+  width: 100% !important;
+  height: 6px !important;
+  border-radius: 3px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  outline: none !important;
+  margin: 15px 0 !important;
+}
+
+.controls input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: #ff8c00 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.5) !important;
+}
+
+/* Социальные иконки - делаем современнее */
+.social-links a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 45px !important;
+  height: 45px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.3s ease !important;
+  margin: 0 8px !important;
+}
+
+.social-links a:hover {
+  background: rgba(255, 140, 0, 0.2) !important;
+  transform: translateY(-3px) !important;
+}
+
+/* Ссылка на твой сайт в футере - белым и с эффектом */
+.footer-personal-link {
+  color: white !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  padding: 8px 15px !important;
+  border-radius: 10px !important;
+  transition: all 0.3s ease !important;
+  display: inline-block !important;
+  margin-top: 10px !important;
+}
+
+.footer-personal-link:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  text-decoration: none !important;
+}
+
+/* --- 6. АДАПТИВНОСТЬ --- */
+@media (max-width: 768px) {
+  .glass-effect {
+    border-radius: 15px !important;
+  }
+  
+  .play-btn {
+    width: 70px !important;
+    height: 70px !important;
+    font-size: 24px !important;
+  }
+  
+  .now-playing {
+    padding: 20px !important;
+    margin: 20px 15px !important;
+  }
+// =============================================
+// KURUSH DIGITAL - Анимации и улучшения
+// =============================================
+
+// 1. Анимация появления элементов при скролле
+document.addEventListener('DOMContentLoaded', function() {
+  // Добавляем классы для анимации основным блокам
+  const sections = document.querySelectorAll('section, .now-playing, .download-section, .contact-section');
+  
+  sections.forEach((section, index) => {
+    section.classList.add('scroll-animate');
+    section.classList.add(`delay-${index % 3 + 1}`);
+  });
+  
+  // Простой наблюдатель за появлением элементов
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+  
+  // Наблюдаем за всеми анимируемыми элементами
+  document.querySelectorAll('.scroll-animate').forEach(el => {
+    observer.observe(el);
+  });
+  
+  // 2. Создаём визуализацию звуковых волн
+  const createAudioWaves = () => {
+    const playerContainer = document.querySelector('.player-container') || document.querySelector('.hero-content');
+    if (!playerContainer) return;
+    
+    const wavesContainer = document.createElement('div');
+    wavesContainer.className = 'audio-waves';
+    
+    for (let i = 0; i < 5; i++) {
+      const waveBar = document.createElement('div');
+      waveBar.className = 'wave-bar';
+      wavesContainer.appendChild(waveBar);
+    }
+    
+    playerContainer.appendChild(wavesContainer);
+    
+    // Показываем/скрываем волны в зависимости от состояния плеера
+    const playBtn = document.querySelector('.play-btn');
+    if (playBtn) {
+      playBtn.addEventListener('click', function() {
+        setTimeout(() => {
+          if (playBtn.classList.contains('playing')) {
+            wavesContainer.classList.add('active');
+          } else {
+            wavesContainer.classList.remove('active');
+          }
+        }, 100);
+      });
+    }
+  };
+  
+  // Запускаем создание волн
+  createAudioWaves();
+  
+  // 3. Добавляем эффект стекла основным элементам
+  const elementsToGlass = ['header', '.now-playing', '.download-section', '.contact-section', 'footer'];
+  
+  elementsToGlass.forEach(selector => {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.classList.add('glass-effect');
+    }
+  });
+  
+  console.log('Kurush Digital enhancements loaded!');
+});
+}
