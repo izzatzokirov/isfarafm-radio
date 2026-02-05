@@ -58,7 +58,7 @@
             100% { transform: scale(1.1) rotate(1deg); }
         }
 
-        /* Языковой переключатель */
+        /* Языковой переключатель - ФИКСИРОВАННЫЙ, НЕ ПРЕСЛЕДУЕТ */
         .language-switcher {
             position: fixed;
             top: 15px;
@@ -90,7 +90,7 @@
             box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
         }
 
-        /* Шапка - СВЕТЛАЯ И ПРОЗРАЧНАЯ */
+        /* Шапка */
         header {
             display: flex;
             justify-content: space-between;
@@ -109,7 +109,6 @@
             gap: 12px;
         }
 
-        /* ЛОГОТИП В ШАПКЕ - БЕЗ АНИМАЦИИ И ФОНА */
         .logo {
             height: 50px;
             width: 50px;
@@ -154,7 +153,7 @@
             background: rgba(255, 107, 53, 0.2);
         }
 
-        /* Боковое меню */
+        /* Боковое меню - БЕЗ ПРОГРАММ */
         .side-menu {
             position: fixed;
             top: 0;
@@ -240,19 +239,12 @@
             margin: 0 auto;
         }
 
-        /* ВИНИЛОВЫЙ ДИСК - БЕЛЫЙ ФОН И РАМКА */
+        /* ВИНИЛОВЫЙ ДИСК - БЕЗ ФОНА И РАМОК, ПРОСТО КРУТИТСЯ */
         .radio-logo-container {
             position: relative;
             margin: 20px auto 30px;
             width: 220px;
             height: 220px;
-            background: white;
-            border-radius: 50%;
-            padding: 15px;
-            box-shadow: 
-                0 0 0 3px var(--accent),
-                0 0 30px rgba(255, 107, 53, 0.5),
-                0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
         .radio-logo-large {
@@ -261,6 +253,7 @@
             border-radius: 50%;
             object-fit: cover;
             transition: all 0.5s ease;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
         }
 
         .radio-logo-large.playing {
@@ -323,57 +316,101 @@
             font-size: 22px;
             color: #FFD700;
             font-weight: bold;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             letter-spacing: 3px;
             font-family: 'Orbitron', sans-serif;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
         }
 
-        /* СТАТИСТИКА СЛУШАТЕЛЕЙ (НОВЫЙ БЛОК) */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 25px 0 30px;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px 15px;
-            text-align: center;
+        /* НОВЫЙ БЛОК ПОСЛЕ ПЛЕЕРА - ТОП ТРЕКИ НЕДЕЛИ */
+        .top-tracks {
+            margin: 30px 0 40px;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .top-tracks-title {
+            font-size: 20px;
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .track-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .track-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
             transition: all 0.3s;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
+        .track-item:hover {
             background: rgba(255, 107, 53, 0.1);
+            transform: translateX(5px);
         }
 
-        .stat-number {
-            font-size: 28px;
+        .track-number {
+            font-size: 18px;
             font-weight: 800;
             color: var(--accent);
+            min-width: 30px;
             font-family: 'Orbitron', sans-serif;
-            margin-bottom: 5px;
         }
 
-        .stat-label {
+        .track-info {
+            flex-grow: 1;
+        }
+
+        .track-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .track-artist {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .track-play {
+            color: var(--accent);
+            background: rgba(255, 107, 53, 0.1);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .track-play:hover {
+            background: rgba(255, 107, 53, 0.3);
+            transform: scale(1.1);
         }
 
         /* ПЛЕЕР */
         .player-container {
             width: 100%;
-            margin: 25px auto;
+            margin: 25px auto 0;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 25px;
             padding: 10px;
@@ -427,7 +464,7 @@
             backdrop-filter: blur(10px);
         }
 
-        /* РЕКЛАМНЫЙ БАННЕР - ФОТО ЗАМЕТНЕЕ */
+        /* РЕКЛАМНЫЙ БАННЕР */
         .ad-container {
             margin: 40px auto;
             position: relative;
@@ -461,7 +498,6 @@
             z-index: 2;
         }
 
-        /* Фото заметнее - текст поверх с прозрачностью */
         .ad-content {
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
             padding: 20px;
@@ -719,12 +755,6 @@
             .radio-logo-container {
                 width: 280px;
                 height: 280px;
-                padding: 20px;
-            }
-            
-            .stats-container {
-                grid-template-columns: repeat(4, 1fr);
-                max-width: 600px;
             }
             
             .days-grid {
@@ -734,6 +764,10 @@
             
             .ad-carousel {
                 height: 180px;
+            }
+            
+            .top-tracks {
+                padding: 30px;
             }
         }
 
@@ -752,7 +786,7 @@
 <body>
     <div class="animated-bg"></div>
 
-    <!-- Языковой переключатель -->
+    <!-- Языковой переключатель - ФИКСИРОВАННЫЙ -->
     <div class="language-switcher">
         <button class="lang-btn active" data-lang="ru">
             <span>🇷🇺 RU</span>
@@ -778,18 +812,13 @@
         </button>
     </header>
 
-    <!-- Боковое меню - ВСЕ ПУНКТЫ ЗАПОЛНЕНЫ НА 2 ЯЗЫКАХ -->
+    <!-- Боковое меню - БЕЗ ПРОГРАММ -->
     <div class="side-menu" id="sideMenu">
         <div class="menu-header" data-ru="Меню Isfara FM" data-tj="Менюи Исфара FM">Меню Isfara FM</div>
         
         <div class="menu-item" data-section="main">
             <i class="fas fa-home"></i>
             <span data-ru="Главная" data-tj="Асосӣ">Главная</span>
-        </div>
-        
-        <div class="menu-item" data-section="programs">
-            <i class="fas fa-tv"></i>
-            <span data-ru="Программы" data-tj="Барномаҳо">Программы</span>
         </div>
         
         <div class="menu-item" data-section="about">
@@ -828,7 +857,7 @@
     <!-- Главный экран -->
     <div class="main-content" id="mainContent">
         <div class="radio-info">
-            <!-- Виниловый диск с белым фоном -->
+            <!-- Виниловый диск БЕЗ ФОНА И РАМОК -->
             <div class="radio-logo-container">
                 <img src="https://i.ibb.co/39MLN2z8/photo-2026-01-28-08-19-22-no-bg-preview-carve-photos.png" 
                      alt="Isfara FM" 
@@ -849,27 +878,7 @@
             <h1 class="radio-title" data-ru="Isfara FM" data-tj="Исфара FM">Isfara FM</h1>
             <p class="radio-frequency" data-ru="93.9 FM - Голос Исфары" data-tj="93.9 FM - Овози Исфара">93.9 FM - Голос Исфары</p>
             
-            <!-- СТАТИСТИКА (НОВЫЙ БЛОК) -->
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-number">10+</div>
-                    <div class="stat-label" data-ru="лет в эфире" data-tj="сол дар эфир">лет в эфире</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label" data-ru="вещание" data-tj="пахш">вещание</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">1000+</div>
-                    <div class="stat-label" data-ru="слушателей" data-tj="гӯшкунак">слушателей</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label" data-ru="программ" data-tj="барнома">программ</div>
-                </div>
-            </div>
-            
-            <!-- Плеер -->
+            <!-- ПЛЕЕР -->
             <div class="player-container">
                 <button class="player-btn" id="playBtn">
                     <i class="fas fa-play"></i>
@@ -879,7 +888,67 @@
             
             <div class="status" id="status" data-ru="Нажмите кнопку для прослушивания" data-tj="Барои гӯш кардан тугмаро пахш кунед">Нажмите кнопку для прослушивания</div>
 
-            <!-- РЕКЛАМНЫЙ БАННЕР - ФОТО ЗАМЕТНЕЕ -->
+            <!-- НОВЫЙ БЛОК: ТОП ТРЕКИ НЕДЕЛИ -->
+            <div class="top-tracks">
+                <h2 class="top-tracks-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span data-ru="Топ треки недели" data-tj="Трекиҳои беҳтарини ҳафта">Топ треки недели</span>
+                </h2>
+                <div class="track-list">
+                    <div class="track-item">
+                        <div class="track-number">1</div>
+                        <div class="track-info">
+                            <div class="track-name" data-ru="Омадам ба ту" data-tj="Омадам ба ту">Омадам ба ту</div>
+                            <div class="track-artist" data-ru="Шабнами Сурайё" data-tj="Шабнами Сурайё">Шабнами Сурайё</div>
+                        </div>
+                        <button class="track-play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="track-item">
+                        <div class="track-number">2</div>
+                        <div class="track-info">
+                            <div class="track-name" data-ru="Диламро" data-tj="Диламро">Диламро</div>
+                            <div class="track-artist" data-ru="Нигина Амонқулова" data-tj="Нигина Амонқулова">Нигина Амонқулова</div>
+                        </div>
+                        <button class="track-play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="track-item">
+                        <div class="track-number">3</div>
+                        <div class="track-info">
+                            <div class="track-name" data-ru="Ишқ" data-tj="Ишқ">Ишқ</div>
+                            <div class="track-artist" data-ru="Дилшодӣ" data-tj="Дилшодӣ">Дилшодӣ</div>
+                        </div>
+                        <button class="track-play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="track-item">
+                        <div class="track-number">4</div>
+                        <div class="track-info">
+                            <div class="track-name" data-ru="Ватан" data-tj="Ватан">Ватан</div>
+                            <div class="track-artist" data-ru="Шукуҳи Сафар" data-tj="Шукуҳи Сафар">Шукуҳи Сафар</div>
+                        </div>
+                        <button class="track-play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="track-item">
+                        <div class="track-number">5</div>
+                        <div class="track-info">
+                            <div class="track-name" data-ru="Салом Исфара" data-tj="Салом Исфара">Салом Исфара</div>
+                            <div class="track-artist" data-ru="Меҳрдод" data-tj="Меҳрдод">Меҳрдод</div>
+                        </div>
+                        <button class="track-play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- РЕКЛАМНЫЙ БАННЕР -->
             <div class="ad-container">
                 <div class="ad-carousel" id="adCarousel">
                     <!-- Слайд 1 -->
@@ -957,7 +1026,7 @@
         </div>
     </div>
 
-    <!-- Секция "О радио" -->
+    <!-- Остальные секции (остаются как были) -->
     <div class="content-section" id="aboutSection">
         <h2 class="section-title" data-ru="О радио Isfara FM" data-tj="Дар бораи радио Исфара FM">О радио Isfara FM</h2>
         <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-top: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
@@ -969,89 +1038,6 @@
             </p>
             <p style="margin-bottom: 20px; line-height: 1.7; font-size: 16px;" data-ru="Мы гордимся тем, что сохраняем традиции и одновременно внедряем инновации в радиовещании. Наша команда профессионалов работает круглосуточно, чтобы вы всегда были в курсе событий и наслаждались качественной музыкой." data-tj="Мо бо он атоф ба хотира меорем, ки анъанаҳоро нигоҳ медорем ва ҳамзамон навовариҳоро дар радиопахш ворид мекунем. Дастаи профессионалии мо шабонаруз кор мекунад, то шумо ҳамеша аз воқеаҳо хабардор бошед ва аз мусиқӣи сифатӣ баҳраманд шавед.">
                 Мы гордимся тем, что сохраняем традиции и одновременно внедряем инновации в радиовещании. Наша команда профессионалов работает круглосуточно, чтобы вы всегда были в курсе событий и наслаждались качественной музыкой.
-            </p>
-            <p style="margin-bottom: 20px; line-height: 1.7; font-size: 16px;" data-ru="Вещаем на частоте 93.9 FM, покрывая весь город Исфара и прилегающие районы. Присоединяйтесь к нашему радио-сообществу!" data-tj="Мо дар басомади 93.9 FM пахш мекунем, ки тамоми шаҳри Исфара ва минтақаҳои атрофро фаро мегирад. Ба ҷамоати радиоии мо ҳамроҳ шавед!">
-                Вещаем на частоте 93.9 FM, покрывая весь город Исфара и прилегающие районы. Присоединяйтесь к нашему радио-сообществу!
-            </p>
-        </div>
-    </div>
-
-    <!-- Секция "Команда" -->
-    <div class="content-section" id="teamSection">
-        <h2 class="section-title" data-ru="Наша команда" data-tj="Дастаи мо">Наша команда</h2>
-        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-top: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <p style="text-align: center; margin-bottom: 25px; font-size: 16px; line-height: 1.7;" data-ru="Наша команда — это коллектив профессионалов, которые с любовью и преданностью создают каждый эфир. Диджеи, журналисты, звукорежиссеры и технические специалисты работают слаженно, чтобы дарить вам лучшие моменты радиоэфира." data-tj="Дастаи мо — ин гурӯҳи профессионалҳо мебошанд, ки бо муҳаббат ва садокат ҳар як эфирро эҷод мекунанд. Диҷейҳо, рӯзноманигорон, садоҳозишгарон ва мутахассисони техникӣ ба таври ҳамоҳанг кор мекунанд, то ба шумо беҳтарин лаҳзаҳои радиоиро бахшад.">
-                Наша команда — это коллектив профессионалов, которые с любовью и преданностью создают каждый эфир. Диджеи, журналисты, звукорежиссеры и технические специалисты работают слаженно, чтобы дарить вам лучшие моменты радиоэфира.
-            </p>
-            <p style="text-align: center; font-style: italic; color: var(--accent);" data-ru="Скоро мы представим каждого члена нашей команды!" data-tj="Ба зудӯ мо ҳар як аъзои дастаи худро муаррифӣ мекунем!">
-                Скоро мы представим каждого члена нашей команды!
-            </p>
-        </div>
-    </div>
-
-    <!-- Секция "Галерея" -->
-    <div class="content-section" id="gallerySection">
-        <h2 class="section-title" data-ru="Галерея" data-tj="Галерея">Галерея</h2>
-        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-top: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <p style="text-align: center; margin-bottom: 20px; font-size: 16px; line-height: 1.7;" data-ru="В нашей фотогалерее вы найдёте яркие моменты с эфиров, встреч с гостями, мероприятий и концертов. Мы делимся с вами лучшими кадрами из жизни радиостанции." data-tj="Дар галереяи аксҳои мо шумо лаҳзаҳои дурахшон аз эфирҳо, дидорҳо бо меҳмонон, маросимҳо ва консертҳоро хоҳед ёфт. Мо беҳтарин аксҳо аз ҳаёти радиостансияро бо шумо мубодила мекунем.">
-                В нашей фотогалерее вы найдёте яркие моменты с эфиров, встреч с гостями, мероприятий и концертов. Мы делимся с вами лучшими кадрами из жизни радиостанции.
-            </p>
-            <p style="text-align: center; font-style: italic; color: var(--accent);" data-ru="Галерея скоро пополнится новыми фотографиями!" data-tj="Галерея ба зудӣ бо аксҳои нав пур карда мешавад!">
-                Галерея скоро пополнится новыми фотографиями!
-            </p>
-        </div>
-    </div>
-
-    <!-- Секция "Видео" -->
-    <div class="content-section" id="videosSection">
-        <h2 class="section-title" data-ru="Видео" data-tj="Видео">Видео</h2>
-        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-top: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <p style="text-align: center; margin-bottom: 20px; font-size: 16px; line-height: 1.7;" data-ru="Смотрите эксклюзивные видео с наших эфиров, интервью с интересными людьми, репортажи с мероприятий и музыкальные клипы. Подписывайтесь на наш YouTube-канал!" data-tj="Видеоиёи эксклюзивии аз эфирҳои мо, муколамаҳо бо одамони ҷолиб, репортажҳо аз маросимҳо ва клипҳои мусиқиро бубинед. Ба канали YouTube-и мо обуна шавед!">
-                Смотрите эксклюзивные видео с наших эфиров, интервью с интересными людьми, репортажи с мероприятий и музыкальные клипы. Подписывайтесь на наш YouTube-канал!
-            </p>
-            <p style="text-align: center; font-style: italic; color: var(--accent);" data-ru="Первый видеоролик скоро появится!" data-tj="Нахустин видео ба зудӣ пайдо мешавад!">
-                Первый видеоролик скоро появится!
-            </p>
-        </div>
-    </div>
-
-    <!-- Секция "Партнёры" -->
-    <div class="content-section" id="partnersSection">
-        <h2 class="section-title" data-ru="Наши партнёры" data-tj="Шарикони мо">Наши партнёры</h2>
-        <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-top: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
-            <p style="text-align: center; margin-bottom: 20px; font-size: 16px; line-height: 1.7;" data-ru="Мы благодарны нашим партнёрам и спонсорам, которые поддерживают развитие Isfara FM. Вместе мы создаём качественный контент для наших слушателей." data-tj="Мо ба шарикон ва сарпарастони худ, ки рушди Исфара FM-ро дастгирӣ мекунанд, миннатдорем. Бо ҳам якҷоя барои гӯшкунакони мо мундариҷаи сифатӣ эҷод мекунем.">
-                Мы благодарны нашим партнёрам и спонсорам, которые поддерживают развитие Isfara FM. Вместе мы создаём качественный контент для наших слушателей.
-            </p>
-            <p style="text-align: center; font-style: italic; color: var(--accent);" data-ru="Новые партнёрства скоро будут объявлены!" data-tj="Шарикиятҳои нав ба зудӣ эълон карда мешаванд!">
-                Новые партнёрства скоро будут объявлены!
-            </p>
-        </div>
-    </div>
-
-    <!-- Секция "Поддержка" - БЕЗ ИМЕНИ РАЗРАБОТЧИКА -->
-    <div class="content-section" id="supportSection">
-        <h2 class="section-title" data-ru="Поддержка" data-tj="Дастгирӣ">Поддержка</h2>
-        <div style="background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 20px; margin-top: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-            <div style="font-size: 22px; color: var(--accent); margin-bottom: 25px; font-weight: bold;">
-                <i class="fas fa-headset" style="margin-right: 10px;"></i>
-                <span data-ru="Мы всегда рады помочь!" data-tj="Мо ҳамеша барои кӯмак хурсандем!">Мы всегда рады помочь!</span>
-            </div>
-            
-            <p style="margin-bottom: 20px; line-height: 1.7; font-size: 16px;" data-ru="Если у вас есть вопросы, предложения по улучшению или вы обнаружили техническую ошибку, пожалуйста, свяжитесь с нами. Ваше мнение очень важно для нас!" data-tj="Агар шумо савол, пешниҳодҳо барои беҳтар кардан ё хатои техникӣ ёфта бошед, лутфан бо мо тамос гиред. Назари шумо барои мо хеле муҳим аст!">
-                Если у вас есть вопросы, предложения по улучшению или вы обнаружили техническую ошибку, пожалуйста, свяжитесь с нами. Ваше мнение очень важно для нас!
-            </p>
-            
-            <p style="margin-bottom: 30px; line-height: 1.7; font-size: 16px;" data-ru="Мы ценим каждого слушателя и стремимся сделать Isfara FM лучше с каждым днем. Ваши отзывы помогают нам расти и развиваться." data-tj="Мо ҳар як гӯшкунакро қадр мекунем ва кӯшиш мекунем, ки Исфара FM-ро ҳар рӯз беҳтар кунем. Фикру мулоҳизаҳои шумо ба мо барои инкишоф ёфтан ва рушд кардан кӯмак мекунанд.">
-                Мы ценим каждого слушателя и стремимся сделать Isfara FM лучше с каждым днем. Ваши отзывы помогают нам расти и развиваться.
-            </p>
-            
-            <a href="https://t.me/kurush_digital" class="telegram-btn" target="_blank">
-                <i class="fab fa-telegram-plane"></i>
-                <span data-ru="Написать в Telegram" data-tj="Ба Telegram нависед">Написать в Telegram</span>
-            </a>
-            
-            <p style="margin-top: 30px; font-style: italic; color: rgba(255, 255, 255, 0.7); font-size: 14px;" data-ru="Обычно отвечаем в течение нескольких часов" data-tj="Одатан дар давоми чанд соат ҷавоб медиҳем">
-                Обычно отвечаем в течение нескольких часов
             </p>
         </div>
     </div>
@@ -1087,9 +1073,6 @@
         let currentAdSlide = 0;
         const adSlides = document.querySelectorAll('.ad-slide');
         const adDots = document.querySelectorAll('.ad-dot');
-
-        // ОТКЛЮЧЕНА АВТОПЕРЕКЛЮЧЕНИЕ РЕКЛАМЫ
-        let adInterval = null;
 
         // РАСПИСАНИЕ
         const schedules = {
@@ -1152,6 +1135,7 @@
             setupAdCarousel();
             setupDaySchedule();
             showDaySchedule('monday');
+            setupTrackButtons();
             
             // Клики по пунктам меню
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -1284,10 +1268,8 @@
             }
         }
 
-        // ========== РЕКЛАМНАЯ КАРУСЕЛЬ - БЕЗ АВТОПЕРЕКЛЮЧЕНИЯ ==========
+        // ========== РЕКЛАМНАЯ КАРУСЕЛЬ ==========
         function setupAdCarousel() {
-            // АВТОПЕРЕКЛЮЧЕНИЕ ОТКЛЮЧЕНО
-            
             // Точки
             adDots.forEach(dot => {
                 dot.addEventListener('click', function() {
@@ -1371,6 +1353,25 @@
                     programList.appendChild(li);
                 });
             }
+        }
+
+        // ========== КНОПКИ ТРЕКОВ ==========
+        function setupTrackButtons() {
+            document.querySelectorAll('.track-play').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Просто анимация кнопки, без реального воспроизведения
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-play')) {
+                        icon.classList.remove('fa-play');
+                        icon.classList.add('fa-pause');
+                        this.style.background = 'rgba(255, 107, 53, 0.5)';
+                    } else {
+                        icon.classList.remove('fa-pause');
+                        icon.classList.add('fa-play');
+                        this.style.background = 'rgba(255, 107, 53, 0.1)';
+                    }
+                });
+            });
         }
     </script>
 </body>
