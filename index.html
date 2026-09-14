@@ -8,11 +8,38 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- ⚡ Локальные шрифты (никаких Google Fonts) -->
+    <style>
+        @font-face {
+            font-family: 'Sora';
+            src: local('Segoe UI Semibold'), local('Roboto'), local('Helvetica Neue'), local('Arial Bold'), local('Arial');
+            font-weight: 600 800;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Sora';
+            src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
+            font-weight: 400 500;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial');
+            font-weight: 300 700;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: local('Consolas'), local('Monaco'), local('Courier New'), local('monospace');
+            font-weight: 400 700;
+            font-display: swap;
+        }
+    </style>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
         :root {
             --bg-1: #0A0D24; --bg-2: #170F3A;
@@ -22,7 +49,9 @@
             --glass: rgba(255, 255, 255, 0.045); --glass-hover: rgba(255, 255, 255, 0.075);
             --border: rgba(255, 255, 255, 0.09); --border-strong: rgba(240, 180, 41, 0.45);
             --radius-lg: 26px; --radius-md: 18px; --radius-sm: 12px;
-            --font-display: 'Sora', sans-serif; --font-body: 'Inter', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+            --font-display: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
             --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         html { scrollbar-width: none; }
@@ -32,6 +61,7 @@
                 linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
             background-attachment: fixed; font-family: var(--font-body); color: var(--text); line-height: 1.5;
             min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 150px; position: relative;
+            overscroll-behavior-y: none;
         }
         body::before {
             content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.05;
@@ -42,6 +72,40 @@
             border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 14px; transition: var(--transition); animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card-label { font-family: var(--font-display); font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+
+        /* ===== SVG-ИКОНКИ ===== */
+        .icon { display: inline-block; width: 1em; height: 1em; fill: currentColor; vertical-align: -0.125em; flex-shrink: 0; }
+        .icon-lg { width: 1.2em; height: 1.2em; }
+
+        /* ===== БАННЕР "НЕТ СЕТИ" ===== */
+        .offline-banner {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+            background: linear-gradient(135deg, rgba(232,98,61,0.95), rgba(200,60,30,0.95));
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            padding: 12px 18px; display: none; align-items: center; justify-content: space-between; gap: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4); animation: slideDown 0.3s ease;
+        }
+        .offline-banner.show { display: flex; }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        .offline-banner-text { font-size: 13.5px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
+        .offline-retry {
+            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white;
+            font-size: 12.5px; font-weight: 700; padding: 7px 14px; border-radius: 20px; cursor: pointer;
+            transition: var(--transition); white-space: nowrap; font-family: var(--font-body);
+        }
+        .offline-retry:hover { background: rgba(255,255,255,0.35); }
+        .offline-retry:active { transform: scale(0.95); }
+
+        /* ===== СВАЙП-НАВИГАЦИЯ ===== */
+        .swipe-container { position: relative; overflow: hidden; touch-action: pan-y; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .page.slide-in-right { animation: slideInRight 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+        .page.slide-in-left { animation: slideInLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+
+        html.large-text .container { zoom: 1.22; }
 
         header { position: sticky; top: 0; z-index: 100; background: rgba(10, 13, 36, 0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border); padding: 13px 18px; display: flex; justify-content: space-between; align-items: center; }
@@ -62,8 +126,6 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 
         .container { flex: 1; max-width: 720px; margin: 0 auto; padding: 16px 16px 30px; width: 100%; position: relative; z-index: 1; }
-        .page { display: none; }
-        .page.active { display: block; }
 
         .bottom-dock {
             position: fixed; left: 0; right: 0; bottom: 0; z-index: 200;
@@ -82,10 +144,9 @@
         .nav-item { display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text-faint);
             font-size: 21px; cursor: pointer; transition: color 0.2s ease, background 0.2s ease; padding: 12px; border-radius: 18px; flex: 1; }
         .nav-item.active { color: var(--gold); background: rgba(240, 180, 41, 0.13); }
-        .nav-item.active i { transform: scale(1.08); }
         .nav-item:hover { color: var(--text); }
-        .nav-item.rg-tap i { animation: navBounce 0.35s ease; }
-        @keyframes navBounce { 0% { transform: scale(1); } 40% { transform: scale(0.82); } 70% { transform: scale(1.18); } 100% { transform: scale(1.08); } }
+        .nav-item.rg-tap .icon { animation: navBounce 0.35s ease; }
+        @keyframes navBounce { 0% { transform: scale(1); } 40% { transform: scale(0.82); } 70% { transform: scale(1.18); } 100% { transform: scale(1); } }
 
         .mini-player {
             background: rgba(17, 15, 38, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -96,7 +157,7 @@
         .mini-player.show { display: block; }
         @keyframes slideUp { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .mini-player-content { display: flex; align-items: center; gap: 12px; }
-        .mini-avatar { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 13px; color: rgba(0,0,0,0.75); cursor: pointer; }
+        .mini-avatar { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 13px; color: rgba(0,0,0,0.75); cursor: pointer; background-size: cover; background-position: center; }
         .mini-player-info { flex: 1; min-width: 0; cursor: pointer; }
         .mini-player-name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .mini-player-status { font-size: 11.5px; color: var(--text-dim); font-family: var(--font-mono); }
@@ -105,8 +166,10 @@
         .mini-btn:hover { color: var(--text); background: var(--glass-hover); }
         .mini-btn.play-btn { color: var(--bg-1); background: var(--gold); font-size: 15px; }
         .mini-btn.play-btn:hover { background: var(--gold-dim); }
+        .mini-btn.mini-back { font-size: 13px; }
 
-        .station-avatar { position: relative; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: rgba(0,0,0,0.72); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25); flex-shrink: 0; }
+        .station-avatar { position: relative; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: rgba(0,0,0,0.72); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25); flex-shrink: 0; background-size: cover; background-position: center; }
+        .station-avatar.cached { background-size: cover; background-position: center; }
 
         .player-hero { text-align: center; padding: 26px 18px 22px; }
         .now-playing-label { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
@@ -114,7 +177,7 @@
         .player-circle { position: relative; width: 168px; height: 168px; margin: 4px auto 14px; }
         .player-circle .station-avatar { width: 100%; height: 100%; font-size: 40px; position: relative; z-index: 2; border: 3px solid var(--gold); box-shadow: 0 0 40px rgba(240, 180, 41, 0.22); }
         .player-circle .ring { position: absolute; top: -12px; left: -12px; width: calc(100% + 24px); height: calc(100% + 24px); border-radius: 50%; border: 2px solid var(--gold); opacity: 0.5; z-index: 1; }
-        .player-circle .ring.pulse { animation: pulseRing 1.8s ease-in-out infinite; }
+        .player-circle .ring.pulse { animation: pulseRing 1.8s ease-in-out infinite; border-color: var(--terracotta); }
         @keyframes pulseRing { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.16); opacity: 0.08; } 100% { transform: scale(1); opacity: 0.5; } }
         .wave-ring { position: absolute; top: -28px; left: -28px; width: calc(100% + 56px); height: calc(100% + 56px); border-radius: 50%; border: 1.5px solid var(--terracotta); opacity: 0; z-index: 0; }
         .wave-ring.active { animation: waveExpand 2.5s ease-out infinite; }
@@ -127,13 +190,18 @@
         .streak-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--terracotta); background: rgba(232,98,61,0.12); border: 1px solid rgba(232,98,61,0.3); padding: 4px 11px; border-radius: 20px; margin-top: 8px; font-family: var(--font-mono); }
 
         .equalizer { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 20px; margin: 8px 0 16px; }
-        .eq-bar { width: 4px; background: var(--gold); border-radius: 2px; height: 4px; transition: height 0.15s ease; opacity: 0.35; }
-        .equalizer.playing .eq-bar { opacity: 1; animation: eqBounce 0.9s ease-in-out infinite; }
-        .eq-bar:nth-child(1) { animation-duration: 0.7s !important; }
-        .eq-bar:nth-child(2) { animation-duration: 1.0s !important; animation-delay: 0.1s; }
-        .eq-bar:nth-child(3) { animation-duration: 0.6s !important; animation-delay: 0.05s; }
-        .eq-bar:nth-child(4) { animation-duration: 0.95s !important; animation-delay: 0.15s; }
-        .eq-bar:nth-child(5) { animation-duration: 0.75s !important; animation-delay: 0.2s; }
+        .eq-bar { width: 4px; background: var(--gold); border-radius: 2px; height: 4px; opacity: 0.35; }
+        .equalizer.playing .eq-bar {
+            opacity: 1;
+            animation-name: eqBounce;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+        .equalizer.playing .eq-bar:nth-child(1) { animation-duration: 0.7s; }
+        .equalizer.playing .eq-bar:nth-child(2) { animation-duration: 1.0s; animation-delay: 0.1s; }
+        .equalizer.playing .eq-bar:nth-child(3) { animation-duration: 0.6s; animation-delay: 0.05s; }
+        .equalizer.playing .eq-bar:nth-child(4) { animation-duration: 0.95s; animation-delay: 0.15s; }
+        .equalizer.playing .eq-bar:nth-child(5) { animation-duration: 0.75s; animation-delay: 0.2s; }
         @keyframes eqBounce { 0%, 100% { height: 4px; } 50% { height: 20px; } }
 
         .tuning-dial { margin: 6px auto 18px; max-width: 320px; position: relative; }
@@ -148,23 +216,27 @@
         .tuning-needle::before { content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--terracotta); }
         .tuning-hint { font-size: 11px; color: var(--text-faint); margin-top: 6px; }
 
-        .btn-primary { background: var(--gold); border: none; border-radius: 40px; padding: 9px 22px; color: var(--bg-1); font-weight: 700; font-family: var(--font-display); cursor: pointer; transition: var(--transition); }
+        .btn-primary { background: var(--gold); border: none; border-radius: 40px; padding: 9px 22px; color: var(--bg-1); font-weight: 700; font-family: var(--font-display); cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary:hover { background: var(--gold-dim); transform: scale(1.02); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-primary:active { transform: scale(0.98); }
         .btn-secondary { background: var(--glass); border: 1px solid var(--border); border-radius: 40px; padding: 9px 16px; color: var(--text); font-weight: 600; font-family: var(--font-body); font-size: 13.5px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 7px; }
         .btn-secondary:hover { border-color: var(--border-strong); color: var(--gold); }
+        .icon-btn-round { width: 52px; height: 52px; border-radius: 50%; background: var(--glass); border: 1px solid var(--border); color: var(--text); font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); flex-shrink: 0; }
+        .icon-btn-round:hover { border-color: var(--border-strong); color: var(--gold); background: var(--glass-hover); }
+        .icon-btn-round:active { transform: scale(0.95); }
         .player-actions { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 
-        .recent-scroll { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 6px; scrollbar-width: none; }
-        .recent-scroll::-webkit-scrollbar { display: none; }
-        .recent-item { display: flex; flex-direction: column; align-items: center; min-width: 66px; cursor: pointer; transition: var(--transition); border: none; background: none; color: var(--text); }
-        .recent-item:hover { transform: translateY(-3px); }
-        .recent-item .station-avatar { width: 56px; height: 56px; font-size: 17px; border: 2px solid rgba(240,180,41,0.4); margin-bottom: 6px; }
-        .recent-item .name { font-size: 11.5px; text-align: center; line-height: 1.2; max-width: 66px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-dim); }
-        .empty-recent { color: var(--text-faint); font-size: 13.5px; padding: 10px 2px; }
+        .new-added-card { background: linear-gradient(135deg, rgba(52,199,120,0.08), rgba(240,180,41,0.06)); border-color: rgba(52,199,120,0.3); }
+        .new-added-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .new-added-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; cursor: pointer; transition: var(--transition); border: none; background: none; color: var(--text); padding: 6px; }
+        .new-added-item:hover { transform: translateY(-3px); }
+        .new-added-item .station-avatar { width: 76px; height: 76px; font-size: 21px; border: 2px solid rgba(52,199,120,0.5); }
+        .new-added-item .name { font-size: 13.5px; font-weight: 600; line-height: 1.25; font-family: var(--font-display); }
+        .new-added-item .freq { font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); }
+        .new-added-badge { font-size: 9.5px; font-weight: 700; color: #34C77A; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .week-card { background: linear-gradient(135deg, rgba(240,180,41,0.10), rgba(232,98,61,0.08)); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: var(--transition); }
+        .week-card { background: linear-gradient(135deg, rgba(240,180,41,0.24), rgba(232,98,61,0.18)); border: 1.5px solid var(--gold); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 22px rgba(240,180,41,0.18); }
         .week-card:hover { transform: translateY(-2px); }
         .week-card .station-avatar { width: 58px; height: 58px; font-size: 18px; border: 2px solid var(--gold); }
         .week-card .week-info { flex: 1; min-width: 0; }
@@ -173,20 +245,36 @@
         .week-card .week-freq { font-size: 12px; color: var(--text-dim); font-family: var(--font-mono); }
         .week-card .week-play { width: 42px; height: 42px; border-radius: 50%; background: var(--gold); color: var(--bg-1); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 
-        .radio-item { display: flex; align-items: center; gap: 13px; padding: 13px 14px; background: var(--glass); border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 9px; transition: var(--transition); cursor: pointer; }
-        .radio-item:hover { border-color: var(--border-strong); transform: translateX(3px); background: var(--glass-hover); }
-        .radio-item.is-live { border-color: rgba(232, 98, 61, 0.4); }
-        .radio-item .station-avatar { width: 52px; height: 52px; font-size: 15px; }
-        .radio-info { flex: 1; min-width: 0; }
-        .radio-name { font-weight: 600; font-size: 16px; font-family: var(--font-display); }
-        .radio-freq { font-size: 12.5px; color: var(--text-dim); font-family: var(--font-mono); margin-top: 1px; }
-        .radio-listeners { font-size: 11.5px; color: var(--teal); margin-top: 3px; font-family: var(--font-mono); }
-        .radio-actions { display: flex; align-items: center; gap: 8px; }
-        .favorite-btn { background: none; border: none; font-size: 19px; cursor: pointer; color: var(--text-faint); transition: var(--transition); padding: 4px; }
+        .radio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .radio-item {
+            position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;
+            gap: 10px; padding: 18px 8px 16px; background: var(--glass); border-radius: var(--radius-md);
+            border: 1px solid var(--border); transition: var(--transition); cursor: pointer;
+        }
+        .radio-item:hover { border-color: var(--border-strong); transform: translateY(-3px); background: var(--glass-hover); }
+        .radio-item.is-live { border-color: var(--terracotta); background: rgba(232, 98, 61, 0.10); box-shadow: 0 0 0 1px rgba(232,98,61,0.25); }
+        .radio-item.is-bg-playing { border-color: rgba(240,180,41,0.5); background: rgba(240,180,41,0.05); }
+        .avatar-wrap { position: relative; display: inline-flex; }
+        .radio-item .station-avatar { width: 88px; height: 88px; font-size: 24px; }
+        .radio-info { min-width: 0; width: 100%; }
+        .radio-name { font-weight: 600; font-size: 14.5px; font-family: var(--font-display); line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .radio-freq { font-size: 12px; color: var(--text-dim); font-family: var(--font-mono); margin-top: 2px; }
+        .radio-listeners { font-size: 12px; color: var(--teal); margin-top: 4px; font-family: var(--font-mono); }
+        .favorite-btn {
+            position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.35); border: none; border-radius: 50%;
+            width: 28px; height: 28px; font-size: 14px; cursor: pointer; color: var(--text-faint); transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; z-index: 2;
+        }
         .favorite-btn.active { color: var(--terracotta); }
-        .play-btn-small { background: var(--gold); border: none; border-radius: 30px; width: 38px; height: 38px; color: var(--bg-1); font-size: 14px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .play-btn-small {
+            position: absolute; bottom: -2px; right: -2px;
+            background: var(--gold); border: 2.5px solid var(--bg-1); border-radius: 50%; width: 32px; height: 32px;
+            color: var(--bg-1); font-size: 13px; cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; justify-content: center;
+        }
         .play-btn-small.playing { background: var(--terracotta); color: white; }
-        .play-btn-small:hover { transform: scale(1.08); }
+        .play-btn-small:hover { transform: scale(1.1); }
+        @media (max-width: 420px) { .radio-grid { grid-template-columns: repeat(2, 1fr); } .radio-item .station-avatar { width: 96px; height: 96px; font-size: 26px; } }
 
         .see-all-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; margin-top: 4px; background: none; border: 1px dashed var(--border); border-radius: var(--radius-md); color: var(--text-dim); font-weight: 600; font-size: 14px; cursor: pointer; transition: var(--transition); }
         .see-all-btn:hover { border-color: var(--border-strong); color: var(--gold); }
@@ -196,7 +284,7 @@
         .filter-chip.active { background: var(--gold); color: var(--bg-1); border-color: var(--gold); }
         .shuffle-hint { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); display: flex; align-items: center; gap: 5px; }
 
-        .back-btn { background: none; border: none; color: var(--gold); font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 8px 2px; margin-bottom: 6px; }
+        .back-btn { background: none; border: none; color: var(--gold); font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 8px 2px; margin-bottom: 6px; font-family: var(--font-body); }
         .back-btn:hover { color: var(--gold-dim); }
 
         .radio-detail-logo.station-avatar { width: 116px; height: 116px; font-size: 34px; margin: 0 auto 14px; border: 3px solid var(--gold); }
@@ -217,18 +305,15 @@
         .empty-state .title { font-family: var(--font-display); font-weight: 700; font-size: 16px; margin-bottom: 6px; }
         .empty-state .desc { color: var(--text-dim); font-size: 13.5px; }
 
-        .fact-container { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-        .fact-nav { background: var(--glass); border: 1px solid var(--border); color: var(--gold); font-size: 15px; cursor: pointer; padding: 9px 12px; border-radius: 50%; transition: var(--transition); flex-shrink: 0; }
-        .fact-nav:hover { border-color: var(--border-strong); background: var(--glass-hover); }
         .pand-author { display: block; margin-top: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--gold); font-weight: 600; }
 
         .profile-item { display: flex; align-items: center; gap: 14px; padding: 14px 2px; border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
         .profile-item:last-child { border-bottom: none; }
         .profile-item:hover { color: var(--gold); }
-        .profile-item i { width: 22px; text-align: center; color: var(--gold); font-size: 16px; }
+        .profile-item .icon { width: 22px; color: var(--gold); font-size: 16px; }
         .profile-item .chev { margin-left: auto; font-size: 12px; color: var(--text-faint); }
-        .lang-buttons { display: flex; gap: 10px; margin-top: 10px; }
-        .lang-btn { background: var(--glass); border: 1px solid var(--border); border-radius: 30px; padding: 8px 18px; color: var(--text-dim); cursor: pointer; transition: var(--transition); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .lang-buttons { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .lang-btn { background: var(--glass); border: 1px solid var(--border); border-radius: 30px; padding: 8px 18px; color: var(--text-dim); cursor: pointer; transition: var(--transition); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; font-family: var(--font-body); }
         .lang-btn.active { background: var(--gold); color: var(--bg-1); border-color: var(--gold); }
         .profile-subsection { margin-top: 10px; padding: 16px; background: var(--glass); border-radius: var(--radius-md); border-left: 3px solid var(--gold); display: none; }
         .profile-subsection.open { display: block; animation: fadeIn 0.3s ease; }
@@ -236,7 +321,7 @@
         .profile-subsection .btn-primary { width: 100%; text-align: center; padding: 11px; }
 
         .timer-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-        .timer-opt { background: var(--glass); border: 1px solid var(--border); border-radius: 30px; padding: 8px 15px; color: var(--text-dim); cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); }
+        .timer-opt { background: var(--glass); border: 1px solid var(--border); border-radius: 30px; padding: 8px 15px; color: var(--text-dim); cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); font-family: var(--font-body); }
         .timer-opt.active { background: var(--terracotta); color: white; border-color: var(--terracotta); }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
@@ -248,7 +333,6 @@
         .badges-row { display: flex; flex-wrap: wrap; gap: 8px; }
         .badge-chip { display: flex; align-items: center; gap: 7px; background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.35); border-radius: 20px; padding: 8px 13px; font-size: 12.5px; font-weight: 600; color: var(--gold); }
         .badge-chip.locked { background: rgba(255,255,255,0.02); border-color: var(--border); color: var(--text-faint); }
-        .badge-chip i { font-size: 13px; }
 
         .faq-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
         .faq-item:last-child { border-bottom: none; }
@@ -256,22 +340,95 @@
         .faq-answer { margin-top: 8px; font-size: 13.5px; color: var(--text-dim); display: none; line-height: 1.6; }
         .faq-answer.open { display: block; }
 
-        footer { text-align: center; padding: 18px; font-size: 11.5px; color: var(--text-faint); border-top: 1px solid var(--border); margin-top: auto; position: relative; z-index: 1; }
+        .card-reveal-btn {
+            width: 100%; background: var(--glass); border: 1px dashed var(--border);
+            border-radius: var(--radius-md); padding: 12px; color: var(--gold);
+            font-weight: 600; font-size: 13.5px; cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-family: var(--font-body); margin-top: 8px;
+        }
+        .card-reveal-btn:hover { border-color: var(--border-strong); background: var(--glass-hover); }
+        .card-reveal-content {
+            display: none; background: var(--glass); padding: 16px; border-radius: var(--radius-md);
+            margin: 12px 0; border: 1px solid var(--border); animation: fadeIn 0.3s ease;
+        }
+        .card-reveal-content.show { display: block; }
+
+        footer { text-align: center; padding: 18px; font-size: 11.5px; color: var(--text-faint); border-top: 1px solid var(--border); margin-top: auto; flex-shrink: 0; position: relative; z-index: 1; }
         .footer-link { color: var(--gold); text-decoration: none; }
         .footer-link:hover { text-decoration: underline; }
 
         .toast-message { position: fixed; bottom: 150px; left: 50%; transform: translateX(-50%); background: rgba(10, 13, 36, 0.96); backdrop-filter: blur(16px); border: 1px solid var(--border-strong); border-radius: 40px; padding: 12px 22px; font-size: 13.5px; z-index: 300; animation: toastUp 0.3s ease; max-width: 88%; text-align: center; display: flex; align-items: center; gap: 8px; }
         @keyframes toastUp { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }
-        .fa-spinner { animation: spin 1s linear infinite; }
+        .spinner { animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .radio-item:hover, .week-card:hover, .new-added-item:hover { transform: none !important; }
+            .toast-message, .page.active, .offline-banner { animation: none !important; }
+            .player-circle .ring.pulse { opacity: 0.9; border-color: var(--terracotta); border-width: 3px; }
+            .wave-ring.active { opacity: 0.4; border-color: var(--terracotta); transform: scale(1.2); }
+            .equalizer.playing .eq-bar { height: 16px !important; opacity: 1; }
+            .radio-item.is-live { border-color: var(--terracotta); background: rgba(232,98,61,0.14); }
+        }
     </style>
 </head>
 <body>
 
+    <!-- ===== SVG-СПРАЙТ (все иконки в одном месте) ===== -->
+    <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></symbol>
+        <symbol id="i-forward" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></symbol>
+        <symbol id="i-backward" viewBox="0 0 24 24"><path d="M20 6l-8.5 6L20 18V6zM11 6v12L2.5 12 11 6z"/></symbol>
+        <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></symbol>
+        <symbol id="i-share" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></symbol>
+        <symbol id="i-gamepad" viewBox="0 0 24 24"><path d="M21.58 16.09l-1.09-7.66C20.21 6.46 18.52 5 16.53 5H7.47C5.48 5 3.79 6.46 3.51 8.43l-1.09 7.66C2.2 17.63 3.39 19 4.94 19c.68 0 1.32-.27 1.8-.75L9 16h6l2.25 2.25c.48.48 1.13.75 1.8.75 1.56 0 2.75-1.37 2.53-2.91zM11 11H9v2H8v-2H6v-1h2V8h1v2h2v1zm4-1c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2 3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></symbol>
+        <symbol id="i-feather" viewBox="0 0 24 24"><path d="M20.24 3.76a6 6 0 00-8.49 0L7.51 8H3v2h2.51L3 12.51V17h4.49l-2.24 2.24 1.41 1.41L9 18.41V21h2v-4.59l6.24-6.24a6 6 0 000-8.49l3 1.08zM10 16v-4.59L15.59 6a4 4 0 015.66 5.66L16 17h-4.59L10 16z"/></symbol>
+        <symbol id="i-fire" viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></symbol>
+        <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/></symbol>
+        <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></symbol>
+        <symbol id="i-envelope" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+        <symbol id="i-heart-outline" viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></symbol>
+        <symbol id="i-question" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></symbol>
+        <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></symbol>
+        <symbol id="i-info" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></symbol>
+        <symbol id="i-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
+        <symbol id="i-eye" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></symbol>
+        <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></symbol>
+        <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></symbol>
+        <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
+        <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></symbol>
+        <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></symbol>
+        <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></symbol>
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
+        <symbol id="i-tower" viewBox="0 0 24 24"><path d="M7.76 16.24C6.67 15.16 6 13.66 6 12s.67-3.16 1.76-4.24l1.42 1.42C8.45 9.9 8 10.9 8 12c0 1.1.45 2.1 1.17 2.83l-1.41 1.41zm8.48 0C17.33 15.16 18 13.66 18 12s-.67-3.16-1.76-4.24l-1.42 1.42C15.55 9.9 16 10.9 16 12c0 1.1-.45 2.1-1.17 2.83l1.41 1.41zM12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7.07-7.07l-1.41 1.41C19.1 5.79 20 7.79 20 10c0 2.21-.9 4.21-2.34 5.66l1.41 1.41C20.85 15.29 22 12.79 22 10s-1.15-5.29-2.93-7.07zM4.93 2.93C3.15 4.71 2 7.21 2 10s1.15 5.29 2.93 7.07l1.41-1.41C4.9 14.21 4 12.21 4 10c0-2.21.9-4.21 2.34-5.66L4.93 2.93z"/></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+        <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></symbol>
+        <symbol id="i-instagram" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2m-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5M12 7a5 5 0 110 10 5 5 0 010-10m0 2a3 3 0 100 6 3 3 0 000-6z"/></symbol>
+        <symbol id="i-telegram" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></symbol>
+        <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></symbol>
+        <symbol id="i-satellite" viewBox="0 0 24 24"><path d="M12 12c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm8.94-8.94l-2.12 2.12c.46 1.28.68 2.63.64 3.99l2.99.05c.06-2.1-.46-4.17-1.51-6.16zM4.06 7.06C3.01 9.05 2.49 11.12 2.55 13.22l2.99-.05c-.04-1.36.18-2.71.64-3.99L4.06 7.06zM3.51 4.51C2.05 6.95 1.27 9.7 1.24 12.5h2c.03-2.29.67-4.55 1.86-6.53L3.51 4.51zm16.98 0l-1.59 1.46c1.19 1.98 1.83 4.24 1.86 6.53h2c-.03-2.8-.81-5.55-2.27-7.99zM12 2c-1.05 0-2.08.11-3.08.33l.5 1.94c.83-.18 1.7-.27 2.58-.27s1.75.09 2.58.27l.5-1.94C14.08 2.11 13.05 2 12 2z"/></symbol>
+    </svg>
+
+    <!-- ===== БАННЕР "НЕТ СЕТИ" ===== -->
+    <div class="offline-banner" id="offlineBanner">
+        <div class="offline-banner-text">
+            <svg class="icon"><use href="#i-wifi"/></svg>
+            <span id="offlineBannerText">Пайвасти интернет нест</span>
+        </div>
+        <button class="offline-retry" onclick="checkConnectionAndRetry()">
+            <svg class="icon"><use href="#i-refresh"/></svg> <span id="offlineRetryText">Аз нав</span>
+        </button>
+    </div>
+
     <header>
         <div class="logo-area" onclick="showPage('main')">
-            <img src="https://i.ibb.co/5g1NGVRD/file-000000001bd071fbb0d2fc8bbcb0138a.png" alt="Logo" class="logo">
+            <img src="https://i.ibb.co/5g1NGVRD/file-000000001bd071fbb0d2fc8bbcb0138a.png" alt="Logo" class="logo" onerror="this.style.display='none'">
             <span class="app-title">Радиоҳои <span>Тоҷикистон</span></span>
         </div>
         <div class="header-right">
@@ -283,7 +440,7 @@
         </div>
     </header>
 
-    <div class="container">
+    <div class="container swipe-container" id="swipeContainer">
 
         <!-- ===== ГЛАВНАЯ ===== -->
         <div class="page active" id="page-main">
@@ -295,9 +452,9 @@
                 <div id="streakPillWrap"></div>
             </div>
 
-            <div class="glass-card" style="padding-bottom: 10px;">
-                <div class="card-label"><i class="fas fa-clock-rotate-left"></i> <span data-i18n="recentTitle"></span></div>
-                <div class="recent-scroll" id="recentList"><div class="empty-recent" data-i18n="recentEmpty"></div></div>
+            <div class="glass-card new-added-card">
+                <div class="card-label"><svg class="icon"><use href="#i-sparkles"/></svg> <span data-i18n="newAddedTitle"></span></div>
+                <div class="new-added-grid" id="newAddedList"></div>
             </div>
 
             <div class="week-card" id="weekCard">
@@ -307,7 +464,7 @@
                     <div class="week-name" id="weekName"></div>
                     <div class="week-freq" id="weekFreq"></div>
                 </div>
-                <div class="week-play"><i class="fas fa-play"></i></div>
+                <div class="week-play"><svg class="icon"><use href="#i-play"/></svg></div>
             </div>
 
             <div class="glass-card player-hero">
@@ -337,46 +494,46 @@
                     <div class="tuning-hint" id="tuningHint" data-i18n="tuningHint"></div>
                 </div>
 
-                <button class="btn-primary" id="playBtnMain" style="width: 100%; max-width: 300px; margin: 4px auto; padding: 15px; font-size: 17px; border-radius: 40px;">
-                    <i class="fas fa-play"></i> <span id="playBtnMainLabel"></span>
-                </button>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 4px auto; max-width: 300px;">
+                    <button class="btn-primary" id="playBtnMain" style="flex: 1; padding: 15px; font-size: 17px; border-radius: 40px;">
+                        <svg class="icon" id="playBtnMainIcon"><use href="#i-play"/></svg> <span id="playBtnMainLabel"></span>
+                    </button>
+                    <button class="icon-btn-round" id="nextBtnMain" title="⏩"><svg class="icon"><use href="#i-forward"/></svg></button>
+                </div>
 
                 <div class="player-actions">
-                    <button class="btn-secondary" id="rouletteBtn"><i class="fas fa-shuffle"></i> <span data-i18n="rouletteBtnLabel"></span></button>
-                    <button class="btn-secondary" id="shareBtnMain"><i class="fas fa-share-nodes"></i> <span data-i18n="shareBtnLabel"></span></button>
-                    <button class="btn-secondary" id="sleepBtnMain"><i class="fas fa-moon"></i> <span id="sleepBtnLabel"></span></button>
+                    <button class="btn-secondary" id="prevBtnMain" title="⏮"><svg class="icon"><use href="#i-backward"/></svg> <span id="prevBtnLabel"></span></button>
+                    <button class="btn-secondary" id="rouletteBtn"><svg class="icon"><use href="#i-shuffle"/></svg> <span data-i18n="rouletteBtnLabel"></span></button>
+                    <button class="btn-secondary" id="shareBtnMain"><svg class="icon"><use href="#i-share"/></svg> <span data-i18n="shareBtnLabel"></span></button>
+                    <button class="btn-secondary" id="sleepBtnMain"><svg class="icon"><use href="#i-moon"/></svg> <span id="sleepBtnLabel"></span></button>
                 </div>
             </div>
 
             <div class="glass-card">
-                <div class="card-label"><i class="fas fa-gamepad"></i> <span data-i18n="gamesTitle"></span></div>
+                <div class="card-label"><svg class="icon"><use href="#i-gamepad"/></svg> <span data-i18n="gamesTitle"></span></div>
                 <div style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 12px;" data-i18n="gamesDesc"></div>
-                <button class="btn-secondary" style="width: 100%; justify-content: center; padding: 12px;" onclick="RadioGames.openHub(currentLang)"><i class="fas fa-gamepad"></i> <span data-i18n="gamesOpenBtn"></span></button>
+                <button class="btn-secondary" style="width: 100%; justify-content: center; padding: 12px;" onclick="openGames()"><svg class="icon"><use href="#i-gamepad"/></svg> <span data-i18n="gamesOpenBtn"></span></button>
             </div>
 
             <div class="glass-card">
-                <div class="card-label"><i class="fas fa-feather"></i> <span data-i18n="factTitle"></span></div>
-                <div class="fact-container">
-                    <button class="fact-nav" id="factPrev"><i class="fas fa-chevron-left"></i></button>
-                    <div style="flex: 1; padding: 0 4px; text-align: center;">
-                        <div id="factOfDay" style="font-size: 14.5px; color: var(--text-dim); line-height: 1.6;"></div>
-                        <span class="pand-author" id="pandAuthor"></span>
-                    </div>
-                    <button class="fact-nav" id="factNext"><i class="fas fa-chevron-right"></i></button>
+                <div class="card-label"><svg class="icon"><use href="#i-feather"/></svg> <span data-i18n="factTitle"></span></div>
+                <div style="text-align: center;">
+                    <div id="factOfDay" style="font-size: 14.5px; color: var(--text-dim); line-height: 1.6;"></div>
+                    <span class="pand-author" id="pandAuthor"></span>
                 </div>
             </div>
 
             <div class="glass-card">
-                <div class="card-label"><i class="fas fa-fire"></i> <span data-i18n="popularTitle"></span></div>
-                <div id="radioList"></div>
-                <button class="see-all-btn" onclick="showPage('radio')"><span data-i18n="seeAllBtn"></span> <i class="fas fa-arrow-right"></i></button>
+                <div class="card-label"><svg class="icon"><use href="#i-fire"/></svg> <span data-i18n="popularTitle"></span></div>
+                <div id="radioList" class="radio-grid"></div>
+                <button class="see-all-btn" onclick="showPage('radio')"><span data-i18n="seeAllBtn"></span> <svg class="icon"><use href="#i-arrow-right"/></svg></button>
             </div>
 
         </div>
 
-        <!-- ===== СТРАНИЦА РАДИО ===== -->
+        <!-- ===== СТРАНИЦА РАДИО (DETAIL) ===== -->
         <div class="page" id="page-radio-detail">
-            <button class="back-btn" onclick="showPage('main')"><i class="fas fa-arrow-left"></i> <span data-i18n="backBtn"></span></button>
+            <button class="back-btn" onclick="showPage('main')"><svg class="icon"><use href="#i-arrow-left"/></svg> <span data-i18n="backBtn"></span></button>
 
             <div class="glass-card" style="text-align: center;">
                 <div class="radio-detail-logo station-avatar" id="detailLogo">--</div>
@@ -388,45 +545,48 @@
                     <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
                 </div>
 
-                <button class="btn-primary" id="detailPlayBtn" style="width: 100%; max-width: 300px; margin: 12px auto 6px; padding: 15px; font-size: 17px; border-radius: 40px;">
-                    <i class="fas fa-play"></i> <span id="detailPlayBtnLabel"></span>
-                </button>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px auto 6px; max-width: 300px;">
+                    <button class="btn-primary" id="detailPlayBtn" style="flex: 1; padding: 15px; font-size: 17px; border-radius: 40px;">
+                        <svg class="icon" id="detailPlayBtnIcon"><use href="#i-play"/></svg> <span id="detailPlayBtnLabel"></span>
+                    </button>
+                    <button class="icon-btn-round" id="nextBtnDetail" title="⏩"><svg class="icon"><use href="#i-forward"/></svg></button>
+                </div>
 
                 <div class="player-actions">
-                    <button class="btn-secondary" id="favBtnDetail"><i class="fa-regular fa-heart"></i> <span data-i18n="favBtnLabel"></span></button>
-                    <button class="btn-secondary" id="shareBtnDetail"><i class="fas fa-share-nodes"></i> <span data-i18n="shareBtnLabel"></span></button>
+                    <button class="btn-secondary" id="favBtnDetail"><svg class="icon"><use href="#i-heart-outline"/></svg> <span data-i18n="favBtnLabel"></span></button>
+                    <button class="btn-secondary" id="shareBtnDetail"><svg class="icon"><use href="#i-share"/></svg> <span data-i18n="shareBtnLabel"></span></button>
                 </div>
             </div>
 
             <div class="glass-card">
                 <div class="radio-detail-desc" id="detailDesc"></div>
                 <div class="radio-detail-contacts" id="detailContacts">
-                    <a href="#" id="detailPhone"><i class="fas fa-phone"></i> Телефон</a>
-                    <a href="#" id="detailWebsite" target="_blank"><i class="fas fa-globe"></i> Сайт</a>
-                    <a href="#" id="detailInstagram" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="#" id="detailTelegram" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                    <a href="#" id="detailPhone" rel="noopener noreferrer"><svg class="icon"><use href="#i-phone"/></svg> Телефон</a>
+                    <a href="#" id="detailWebsite" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-globe"/></svg> Сайт</a>
+                    <a href="#" id="detailInstagram" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-instagram"/></svg> Instagram</a>
+                    <a href="#" id="detailTelegram" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-telegram"/></svg> Telegram</a>
                 </div>
             </div>
         </div>
 
-        <!-- ===== РАДИО (список) ===== -->
+        <!-- ===== РАДИО (СПИСОК) ===== -->
         <div class="page" id="page-radio">
             <input type="text" class="search-input" id="searchInput" data-i18n-placeholder="searchPlaceholder">
             <div class="filter-chips">
                 <button class="filter-chip active" data-filter="all" onclick="setListFilter('all')" data-i18n="filterAll"></button>
                 <button class="filter-chip" data-filter="fav" onclick="setListFilter('fav')" data-i18n="filterFav"></button>
-                <span class="shuffle-hint"><i class="fas fa-shuffle"></i> <span data-i18n="shuffleHint"></span></span>
+                <span class="shuffle-hint"><svg class="icon"><use href="#i-shuffle"/></svg> <span data-i18n="shuffleHint"></span></span>
             </div>
-            <div id="radioListFull"></div>
+            <div id="radioListFull" class="radio-grid"></div>
             <div class="empty-state" id="radioListEmpty" style="display:none;">
-                <div class="icon"><i class="fas fa-satellite-dish"></i></div>
+                <div class="icon"><svg class="icon icon-lg"><use href="#i-satellite"/></svg></div>
                 <div class="title" data-i18n="emptySearchTitle"></div>
                 <div class="desc" data-i18n="emptySearchDesc"></div>
             </div>
         </div>
 
         <!-- ===== ИЗБРАННОЕ ===== -->
-        <div class="page" id="page-favorites"><div id="favoritesList"></div></div>
+        <div class="page" id="page-favorites"><div id="favoritesList" class="radio-grid"></div></div>
 
         <!-- ===== ПРОФИЛЬ ===== -->
         <div class="page" id="page-profile">
@@ -434,17 +594,25 @@
                 <div style="font-family: var(--font-display); font-weight: 700; font-size: 18px; margin-bottom: 16px;" data-i18n="profileTitle"></div>
 
                 <div class="profile-item" style="flex-direction: column; align-items: flex-start;">
-                    <div><i class="fas fa-globe"></i> <span data-i18n="langLabel"></span></div>
+                    <div><svg class="icon"><use href="#i-globe"/></svg> <span data-i18n="langLabel"></span></div>
                     <div class="lang-buttons">
                         <button class="lang-btn active" data-lang="tg" onclick="setLanguage('tg')">🇹🇯 Тоҷикӣ</button>
                         <button class="lang-btn" data-lang="ru" onclick="setLanguage('ru')">🇷🇺 Русский</button>
                     </div>
                 </div>
 
-                <div class="profile-item" onclick="toggleProfileSection('stats')"><i class="fas fa-chart-simple"></i> <span data-i18n="statsLabel"></span><i class="fas fa-chevron-down chev"></i></div>
+                <div class="profile-item" style="flex-direction: column; align-items: flex-start;">
+                    <div><svg class="icon"><use href="#i-chart"/></svg> <span data-i18n="textSizeLabel"></span></div>
+                    <div class="lang-buttons">
+                        <button class="lang-btn active" data-size="normal" onclick="setTextSize('normal')" data-i18n="textSizeNormal"></button>
+                        <button class="lang-btn" data-size="large" onclick="setTextSize('large')" data-i18n="textSizeLarge"></button>
+                    </div>
+                </div>
+
+                <div class="profile-item" onclick="toggleProfileSection('stats')"><svg class="icon"><use href="#i-chart"/></svg> <span data-i18n="statsLabel"></span><svg class="icon chev"><use href="#i-chevron-down"/></svg></div>
                 <div class="profile-subsection" id="statsSection"></div>
 
-                <div class="profile-item" onclick="toggleProfileSection('sleep')"><i class="fas fa-moon"></i> <span data-i18n="sleepLabel"></span><i class="fas fa-chevron-down chev"></i></div>
+                <div class="profile-item" onclick="toggleProfileSection('sleep')"><svg class="icon"><use href="#i-moon"/></svg> <span data-i18n="sleepLabel"></span><svg class="icon chev"><use href="#i-chevron-down"/></svg></div>
                 <div class="profile-subsection" id="sleepSection">
                     <p data-i18n="sleepDesc"></p>
                     <div class="timer-options" id="timerOptions">
@@ -456,7 +624,7 @@
                     </div>
                 </div>
 
-                <div class="profile-item" onclick="toggleProfileSection('contact')"><i class="fas fa-envelope"></i> <span data-i18n="contactLabel"></span><i class="fas fa-chevron-down chev"></i></div>
+                <div class="profile-item" onclick="toggleProfileSection('contact')"><svg class="icon"><use href="#i-envelope"/></svg> <span data-i18n="contactLabel"></span><svg class="icon chev"><use href="#i-chevron-down"/></svg></div>
                 <div class="profile-subsection" id="contactSection">
                     <p data-i18n="contactDesc1"></p>
                     <p data-i18n="contactDesc2"></p>
@@ -464,37 +632,40 @@
                     <button class="btn-primary" onclick="openTelegram()"><span data-i18n="writeUsBtn"></span></button>
                 </div>
 
-                <div class="profile-item" onclick="toggleProfileSection('donate')"><i class="fas fa-heart" style="color: var(--terracotta);"></i> <span data-i18n="donateLabel"></span><i class="fas fa-chevron-down chev"></i></div>
+                <div class="profile-item" onclick="toggleProfileSection('donate')"><svg class="icon" style="color: var(--terracotta);"><use href="#i-heart"/></svg> <span data-i18n="donateLabel"></span><svg class="icon chev"><use href="#i-chevron-down"/></svg></div>
                 <div class="profile-subsection" id="donateSection">
                     <p data-i18n="donateDesc" style="white-space: pre-line;"></p>
-                    <div style="background: var(--glass); padding: 16px; border-radius: var(--radius-md); margin: 12px 0; border: 1px solid var(--border);">
+                    <button class="card-reveal-btn" id="revealCardBtn" onclick="revealCardDetails()">
+                        <svg class="icon"><use href="#i-eye"/></svg> <span data-i18n="revealCardBtn"></span>
+                    </button>
+                    <div class="card-reveal-content" id="cardRevealContent">
                         <div style="color: var(--gold); font-weight: 600; font-size: 13px;" data-i18n="cardNumberLabel"></div>
                         <div style="font-size: 18px; letter-spacing: 2px; font-weight: 700; font-family: var(--font-mono); margin-top: 4px;">5413 5252 0028 0531</div>
                         <div style="font-size: 12.5px; color: var(--text-dim); margin-top: 2px;" data-i18n="bankLabel"></div>
                     </div>
-                    <button class="btn-primary" onclick="window.open('https://t.me/kurush_digital', '_blank')" style="width: 100%;"><span data-i18n="writeTelegramBtn"></span></button>
+                    <button class="btn-primary" onclick="window.open('https://t.me/kurush_digital', '_blank', 'noopener,noreferrer')" style="width: 100%; margin-top: 12px;"><span data-i18n="writeTelegramBtn"></span></button>
                 </div>
 
-                <div class="profile-item" onclick="toggleProfileSection('faq')"><i class="fas fa-question-circle"></i> <span>FAQ</span><i class="fas fa-chevron-down chev"></i></div>
+                <div class="profile-item" onclick="toggleProfileSection('faq')"><svg class="icon"><use href="#i-question"/></svg> <span>FAQ</span><svg class="icon chev"><use href="#i-chevron-down"/></svg></div>
                 <div class="profile-subsection" id="faqSection"><div id="faqList"></div></div>
 
-                <div class="profile-item" onclick="rateApp()"><i class="fas fa-star"></i> <span data-i18n="rateLabel"></span></div>
+                <div class="profile-item" onclick="rateApp()"><svg class="icon"><use href="#i-star"/></svg> <span data-i18n="rateLabel"></span></div>
 
-                <div class="profile-item" onclick="toggleProfileSection('about')"><i class="fas fa-info-circle"></i> <span data-i18n="aboutLabel"></span><i class="fas fa-chevron-down chev"></i></div>
+                <div class="profile-item" onclick="toggleProfileSection('about')"><svg class="icon"><use href="#i-info"/></svg> <span data-i18n="aboutLabel"></span><svg class="icon chev"><use href="#i-chevron-down"/></svg></div>
                 <div class="profile-subsection" id="aboutSection">
                     <p data-i18n="aboutText1"></p>
-                    <p style="margin-top: 8px;"><span data-i18n="versionLabel"></span>: <strong>3.3</strong></p>
-                    <p style="margin-top: 4px;"><span data-i18n="devLabel"></span>: <a href="https://kurushdigital.one" target="_blank" class="footer-link">Kurush Digital</a></p>
+                    <p style="margin-top: 8px;"><span data-i18n="versionLabel"></span>: <strong>3.5</strong></p>
+                    <p style="margin-top: 4px;"><span data-i18n="devLabel"></span>: <a href="https://kurushdigital.one" target="_blank" rel="noopener noreferrer" class="footer-link">Kurush Digital</a></p>
                     <p style="margin-top: 12px; font-size: 12px; color: var(--text-faint);" data-i18n="copyrightFooter"></p>
                 </div>
 
-                <div class="profile-item" onclick="exitApp()" style="color: var(--terracotta);"><i class="fas fa-sign-out-alt" style="color: var(--terracotta);"></i> <span data-i18n="logoutLabel"></span></div>
+                <div class="profile-item" onclick="exitApp()" style="color: var(--terracotta);"><svg class="icon" style="color: var(--terracotta);"><use href="#i-logout"/></svg> <span data-i18n="logoutLabel"></span></div>
             </div>
         </div>
 
     </div>
 
-    <!-- ===== ПЛАВАЮЩИЙ ДОК ВНИЗУ ===== -->
+    <!-- ===== ПЛАВАЮЩИЙ ДОК ===== -->
     <div class="bottom-dock" id="bottomDock">
         <div class="mini-player" id="miniPlayer">
             <div class="mini-player-content">
@@ -504,62 +675,58 @@
                     <div class="mini-player-status" id="miniPlayerStatus"></div>
                 </div>
                 <div class="mini-player-controls">
-                    <button class="mini-btn play-btn" id="miniPlayBtn"><i class="fas fa-play"></i></button>
-                    <button class="mini-btn" id="miniCloseBtn"><i class="fas fa-times"></i></button>
+                    <button class="mini-btn mini-back" id="miniPrevBtn" title="⏮"><svg class="icon"><use href="#i-backward"/></svg></button>
+                    <button class="mini-btn play-btn" id="miniPlayBtn"><svg class="icon" id="miniPlayIcon"><use href="#i-play"/></svg></button>
+                    <button class="mini-btn" id="miniCloseBtn"><svg class="icon"><use href="#i-close"/></svg></button>
                 </div>
             </div>
         </div>
 
         <nav class="bottom-nav" id="bottomNav">
-            <button class="nav-item active" data-page="main"><i class="fas fa-house"></i></button>
-            <button class="nav-item" data-page="radio"><i class="fas fa-tower-broadcast"></i></button>
-            <button class="nav-item" data-page="favorites"><i class="fa-regular fa-heart"></i></button>
-            <button class="nav-item" data-page="profile"><i class="fa-regular fa-user"></i></button>
+            <button class="nav-item active" data-page="main"><svg class="icon"><use href="#i-home"/></svg></button>
+            <button class="nav-item" data-page="radio"><svg class="icon"><use href="#i-tower"/></svg></button>
+            <button class="nav-item" data-page="favorites"><svg class="icon"><use href="#i-heart-outline"/></svg></button>
+            <button class="nav-item" data-page="profile"><svg class="icon"><use href="#i-user"/></svg></button>
         </nav>
     </div>
 
-    <footer style="margin-bottom: 150px;"><div>© 2026 | <a href="https://kurushdigital.one" target="_blank" class="footer-link">Kurush Digital</a></div></footer>
+    <footer><div>© 2026 | <a href="https://kurushdigital.one" target="_blank" rel="noopener noreferrer" class="footer-link">Kurush Digital</a></div></footer>
 
-    <audio id="audioPlayer"></audio>
+    <audio id="audioPlayer" preload="none"></audio>
 
-    <script src="games.js"></script>
     <script>
-        const APP_LOGO = 'https://i.ibb.co/5g1NGVRD/file-000000001bd071fbb0d2fc8bbcb0138a.png';
+        /* ============================================================
+           PESHRAS RADIO — JavaScript (v3.5, без внешних шрифтов)
+           ============================================================ */
+
         const PLAY_MARKET_URL = 'https://play.google.com/store/apps/details?id=com.kurushdigital.isfsrafm';
+        const STREAM_TIMEOUT_MS = 15000;
+        const MAX_HISTORY = 7;
 
         const RADIOS = [
-            { name: 'Радиои Исфара', freq: '93.9 FM', logo: '', stream: 'https://c40.radioboss.fm:8287/stream', desc_tg: 'Таронаҳои тоҷикӣ, эронӣ, афғонӣ ва ӯзбекӣ.', desc_ru: 'Негосударственное радио Таджикистана.', phone: '44 603 7777', website: '', instagram: 'https://www.instagram.com/radioiimruz/', telegram: '' },
-            { name: 'Радиои Имруз', freq: '107.4 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-imruz', desc_tg: 'Таронаҳои тоҷикӣ, эронӣ, афғонӣ ва ӯзбекӣ.', desc_ru: 'Негосударственное радио Таджикистана.', phone: '44 603 7777', website: '', instagram: 'https://www.instagram.com/radioiimruz/', telegram: '' },
-            { name: 'ZET FM', freq: '103.0 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-zetfm', desc_tg: 'Радиои муосири тоҷикӣ.', desc_ru: 'Современное таджикское радио.', phone: '+992 92 123 45 67', website: 'https://zetfm.tj', instagram: 'https://instagram.com/zetfm', telegram: 'https://t.me/zetfm' },
-            { name: 'Радио Диёр', freq: '105.5 FM', logo: '', stream: 'https://c16.radioboss.fm/stream/234', desc_tg: 'Радиои фарҳангии Тоҷикистон.', desc_ru: 'Культурное радио Таджикистана.', phone: '+992 93 123 45 67', website: 'https://diyor.tj', instagram: 'https://instagram.com/diyor', telegram: 'https://t.me/diyor' },
-            { name: 'Радио Наво', freq: '96.5 FM', logo: '', stream: 'https://radio.navo.tj:8443/live', desc_tg: 'Радиои мусиқии тоҷикӣ.', desc_ru: 'Таджикское музыкальное радио.', phone: '+992 94 123 45 67', website: 'https://navo.tj', instagram: 'https://instagram.com/navo', telegram: 'https://t.me/navo' },
-            { name: 'Радио Пайванд', freq: '100.6 FM', logo: '', stream: 'https://c6.radioboss.fm/stream/234', desc_tg: 'Радиои пайвандкунанда.', desc_ru: 'Радио, объединяющее людей.', phone: '+992 95 123 45 67', website: 'https://payvand.tj', instagram: 'https://instagram.com/payvand', telegram: 'https://t.me/payvand' },
-            { name: 'Ҳамсадо FM', freq: '94.5 FM', logo: '', stream: 'https://c23.radioboss.fm/stream/102', desc_tg: 'Радиои ҳамсадо.', desc_ru: 'Радио единства.', phone: '+992 96 123 45 67', website: 'https://hamsado.tj', instagram: 'https://instagram.com/hamsado', telegram: 'https://t.me/hamsado' },
-            { name: 'Радио Қанд', freq: '87.7 FM', logo: '', stream: 'https://listen7.myradio24.com/tamish', desc_tg: 'Радиои Канди Тоҷикистон.', desc_ru: 'Радио Канда Таджикистана.', phone: '+992 97 123 45 67', website: 'https://kand.tj', instagram: 'https://instagram.com/kand', telegram: 'https://t.me/kand' },
-            { name: 'Радио Азия+', freq: '107.0 FM', logo: '', stream: 'https://eu.asiaplusradio.tj:8443/ap', desc_tg: 'Радиои Азия+.', desc_ru: 'Радио Азия+.', phone: '+992 987 65 43 21', website: 'https://asiaplus.news', instagram: 'https://www.instagram.com/asiaplustj/', telegram: 'https://t.me/asiaplus' },
-            { name: 'Радио Тироз', freq: '103.7 FM', logo: '', stream: 'https://eu1.fastcast4u.com/proxy/khusrav/stream?n=b742a6676ac1f8543fc2', desc_tg: 'Радиои Ти роз.', desc_ru: 'Радио Ти роз.', phone: '+992 99 123 45 67', website: 'https://tiroz.tj', instagram: 'https://instagram.com/tiroz', telegram: 'https://t.me/tiroz' },
-            { name: 'Радио Нав', freq: '95.5 FM', logo: '', stream: 'https://c38.radioboss.fm:8172/stream', desc_tg: 'Радиои Нав.', desc_ru: 'Новое радио.', phone: '+992 91 123 45 67', website: 'https://nav.tj', instagram: 'https://instagram.com/nav', telegram: 'https://t.me/nav' },
-            { name: 'Шаҳри ман', freq: '97.7 FM', logo: '', stream: 'https://c16.radioboss.fm:8438/stream', desc_tg: 'Радиои Шахри ман.', desc_ru: 'Радио Мой город.', phone: '+992 92 234 56 78', website: 'https://shahriman.tj', instagram: 'https://instagram.com/shahriman', telegram: 'https://t.me/shahriman' },
-            { name: 'Радио Ховар', freq: '90.9 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/khovar', desc_tg: 'Радиои Ховар — овози шаҳри қадим.', desc_ru: 'Радио Ховар — голос древнего города.', phone: '+992 92 345 67 89', website: 'https://isfarafm.tj', instagram: 'https://instagram.com/isfarafm', telegram: 'https://t.me/isfarafm' },
-            { name: 'Овози Тоҷик', freq: '101.2 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-ovozi-tojik', desc_tg: 'Овози миллии тоҷикон.', desc_ru: 'Голос таджикского народа.', phone: '', website: '', instagram: '', telegram: '' },
-            { name: 'Радиои Тоҷикистон', freq: '88.5 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-tojikiston', desc_tg: 'Радиои расмии давлатии Тоҷикистон.', desc_ru: 'Государственное радио Таджикистана.', phone: '', website: '', instagram: '', telegram: '' },
-            { name: 'Радиои Фарҳанг', freq: '92.0 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-farhangn', desc_tg: 'Радиои фарҳанг ва ҳунари тоҷик.', desc_ru: 'Радио культуры и искусства Таджикистана.', phone: '', website: '', instagram: '', telegram: '' },
-            { name: 'Радио Ватан', freq: '90.5 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-vatan', desc_tg: 'Радиои Ватан — садои диёр.', desc_ru: 'Радио Ватан — голос родного края.', phone: '', website: '', instagram: '', telegram: '' },
-            { name: 'Садои Душанбе', freq: '89.0 FM', logo: '', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-sadoi-dushanbe', desc_tg: 'Садои пойтахти Тоҷикистон.', desc_ru: 'Голос столицы Таджикистана.', phone: '', website: '', instagram: '', telegram: '' },
-            { name: 'Радио Navahang', freq: '99.0 FM', logo: '', stream: 'https://navairan.com/;stream.nsv', desc_tg: 'Радиои навохти мусиқии тоҷикӣ.', desc_ru: 'Радио с таджикской музыкой.', phone: '', website: '', instagram: '', telegram: '' }
+            { name: 'Радиои Имруз', freq: '107.4 FM', logo: 'https://i.ibb.co/6cD3bDWT/1789265934733.png', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-imruz', desc_tg: 'Таронаҳои тоҷикӣ, эронӣ, афғонӣ ва ӯзбекӣ.', desc_ru: 'Негосударственное радио Таджикистана.', phone: '44 603 7777', website: '', instagram: 'https://www.instagram.com/radioiimruz/', telegram: '' },
+            { name: 'ZET FM', freq: '103.0 FM', logo: 'https://i.ibb.co/twbncJ0W/1789216795388.png', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-zetfm', desc_tg: 'Радиои муосири тоҷикӣ.', desc_ru: 'Современное таджикское радио.', phone: '+992 92 123 45 67', website: 'https://zetfm.tj', instagram: 'https://instagram.com/zetfm', telegram: 'https://t.me/zetfm' },
+            { name: 'Радио Диёр', freq: '105.5 FM', logo: 'https://i.ibb.co/9k7w282h/1789216877949.png', stream: 'https://c16.radioboss.fm/stream/234', desc_tg: 'Радиои фарҳангии Тоҷикистон.', desc_ru: 'Культурное радио Таджикистана.', phone: '+992 93 123 45 67', website: 'https://diyor.tj', instagram: 'https://instagram.com/diyor', telegram: 'https://t.me/diyor' },
+            { name: 'Радио Наво', freq: '96.5 FM', logo: 'https://i.ibb.co/gFBH0pcG/1789216932478.png', stream: 'https://radio.navo.tj:8443/live', desc_tg: 'Радиои мусиқии тоҷикӣ.', desc_ru: 'Таджикское музыкальное радио.', phone: '+992 94 123 45 67', website: 'https://navo.tj', instagram: 'https://instagram.com/navo', telegram: 'https://t.me/navo' },
+            { name: 'Радио Пайванд', freq: '100.6 FM', logo: 'https://i.ibb.co/Kp6sB14g/2209-edit-99135194167233.png', stream: 'https://c6.radioboss.fm/stream/234', desc_tg: 'Радиои пайвандкунанда.', desc_ru: 'Радио, объединяющее людей.', phone: '+992927778210', website: 'https://payvand.tj', instagram: 'https://instagram.com/payvand', telegram: 'https://t.me/payvand' },
+            { name: 'Ҳамсадо FM', freq: '94.5 FM', logo: 'https://i.ibb.co/mVc1Fjsg/Screenshot-20260701-144112-com-android-chrome-Chrome-Tabbed-Activity-edit-97713131978192.jpg', stream: 'https://c23.radioboss.fm/stream/102', desc_tg: 'Ҳамсадои дили шумо.', desc_ru: 'Радио единства.', phone: '+992 888 000 944', website: 'https://hamsado.tj', instagram: 'https://www.instagram.com/HAMSADO/', telegram: 'https://t.me/hamsado' },
+            { name: 'Радио Қанд', freq: '87.7 FM', logo: 'https://i.ibb.co/LdyJGdQS/unnamed-edit-99041490010342.jpg', stream: 'https://listen7.myradio24.com/tamish', desc_tg: 'Радиои Канди Тоҷикистон.', desc_ru: 'Радио Канда Таджикистана.', phone: '+992 93 570 0077', website: 'https://kandfm.tj', instagram: 'https://instagram.com/kandfm.tj', telegram: 'https://t.me/kandfm.tj' },
+            { name: 'Радио Азия+', freq: '107.0 FM', logo: 'https://i.ibb.co/7dXxH9HB/le5qn2-Wl-meoj4-KGEIc-X4-LKGy-Ff-CA8t5-E0-Yjz-SHug-SZ9a-Qzz-KIg-Y9-j-sbg-PMMJd-Yi-G0-JQs-S8ht-YAnw-Za-Aa-K.jpg', stream: 'https://eu.asiaplusradio.tj:8443/ap', desc_tg: 'Музыка и новости 24/7. Один из главных голосов Таджикистана — теперь в один клик, в любой точке мира.', desc_ru: 'Радио Азия+.', phone: '+992 987 65 43 21', website: 'https://asiaplus.news', instagram: 'https://www.instagram.com/asiaplustj', telegram: 'https://t.me/asiaplustj' },
+            { name: 'Радио Тироз', freq: '103.7 FM', logo: 'https://i.ibb.co/8gpf1WTd/1789217593193.png', stream: 'https://eu1.fastcast4u.com/proxy/khusrav/stream?n=b742a6676ac1f8543fc2', desc_tg: 'Радиои Тироз.', desc_ru: 'Радио Тироз.', phone: '+992 99 123 45 67', website: 'https://tiroz.tj', instagram: 'https://instagram.com/tiroz', telegram: 'https://t.me/tiroz' },
+            { name: 'Радио Нав', freq: '95.5 FM', logo: 'https://i.ibb.co/dJ4BWhFK/channels4-profile-edit-99014396214571.jpg', stream: 'https://c38.radioboss.fm:8172/stream', desc_tg: 'Новое Радио — это самая модная и популярная музыка! В эфире только суперхиты и суперновинки.', desc_ru: 'Новое радио.', phone: '+992 55 055 59 55', website: 'https://newradio.tj/', instagram: 'https://www.instagram.com/newradio.tj/', telegram: 'https://t.me/newradioTjk' },
+            { name: 'Шаҳри ман', freq: '97.7 FM', logo: 'https://i.ibb.co/xKHLfTn6/1789217022636-edit-99953010655723.png', stream: 'https://c16.radioboss.fm:8438/stream', desc_tg: 'Радиои Шахри ман.', desc_ru: 'Радио Мой город.', phone: '+992 92 234 56 78', website: 'https://shahriman.tj', instagram: 'https://instagram.com/shahriman', telegram: 'https://t.me/shahriman' },
+            { name: 'Радиои Navohang', freq: '99.0 FM', logo: 'https://i.ibb.co/69DHPGg/maxresdefault-edit-106413644110967.jpg', stream: 'https://navairan.com/;stream.nsv', desc_tg: 'Радиои нави шаҳри Исфара.', desc_ru: 'Новое радио города Исфара.', phone: '', website: 'https://isfarafm.tj', instagram: 'https://instagram.com/isfarafm', telegram: 'https://t.me/isfarafm', priority: true },
+            { name: 'Радио Ховар', freq: '91.0 FM', logo: 'https://i.ibb.co/Hf5zRJyS/1789274857360.png', stream: 'https://55ca6d57744.vps.myjino.ru/khovar', desc_tg: 'Радиои Ховар — овози шаҳри қадим.', desc_ru: 'Радио Ховар — голос древнего города.', phone: '', website: '', instagram: '', telegram: '' },
+            { name: 'Овози Тоҷик', freq: '101.2 FM', logo: 'https://i.ibb.co/9kKSg0ZB/1789217642540.png', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-ovozi-tojik', desc_tg: 'Овози миллии тоҷикон.', desc_ru: 'Голос таджикского народа.', phone: '', website: '', instagram: '', telegram: '' },
+            { name: 'Радиои Тоҷикистон', freq: '88.5 FM', logo: 'https://i.ibb.co/vvP1yyNM/1789265859840.png', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-tojikiston', desc_tg: 'Радиои расмии давлатии Тоҷикистон.', desc_ru: 'Государственное радио Таджикистана.', phone: '', website: '', instagram: '', telegram: '' },
+            { name: 'Радиои Фарҳанг', freq: '92.0 FM', logo: 'https://i.ibb.co/hJpLJWCj/1789265985464.png', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-farhangn', desc_tg: 'Радиои фарҳанг ва ҳунари тоҷик.', desc_ru: 'Радио культуры и искусства Таджикистана.', phone: '', website: '', instagram: '', telegram: '' },
+            { name: 'Радио Ватан', freq: '90.5 FM', logo: 'https://i.ibb.co/9kZMNrkF/1789267528729-edit-117867145540608.png', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-vatan', desc_tg: 'Радиои Ватан — садои диёр.', desc_ru: 'Радио Ватан — голос родного края.', phone: '', website: '', instagram: '', telegram: '' },
+            { name: 'Садои Душанбе', freq: '89.0 FM', logo: 'https://i.ibb.co/rfGCJ5ZR/1789217541111.png', stream: 'https://55ca6d57744.vps.myjino.ru/radioi-sadoi-dushanbe', desc_tg: 'Садои пойтахти Тоҷикистон.', desc_ru: 'Голос столицы Таджикистана.', phone: '', website: '', instagram: '', telegram: '' },
+            { name: 'Радио Сафина', freq: '98.5 FM', logo: '', stream: 'https://resolutions-scratch-feeding-pink.trycloudflare.com/radiosafinalive', desc_tg: 'Садои нав, эҳсоси нав', desc_ru: 'Муассисаи давлатии «Телевизиони Сафина»', phone: '', website: '', instagram: 'https://www.instagram.com/tv_safina_official', telegram: 'https://t.me/tv_safina_official' },
+            { name: 'Радио Исфара', freq: '93.9 FM', logo: 'https://i.ibb.co/Dqng8zV/file-00000000904c81f49d78945c850cf331-edit-99265565890673.png', stream: 'https://c40.radioboss.fm:8287/stream', desc_tg: 'Аз шумост ва барои шумост.', desc_ru: 'Радио с таджикской музыкой.', phone: ' +992 927 07 14 65', website: 'https://isfarafm.com/', instagram: 'https://instagram.com/radio_isfara', telegram: 'https://t.me/isfarafm' }
         ];
-        // 👆 Чтобы поставить реальный логотип станции, впишите ссылку на картинку в поле "logo".
-        // Пока поле пустое — вместо логотипа показывается цветной кружок с инициалами названия.
-        // ⚠️ При добавлении новой станции: freq должна быть уникальной (используется FM-шкалой),
-        // desc_tg/desc_ru — своим текстом, иначе описание одной станции покажется у другой.
 
         const PANDU = [
-            { text: 'Ин ҷаҳонро нигар ба чашми хирад, На бад-он чашм, к-андар ӯ нигарӣ.', author: 'Рӯдакӣ' },
-            { text: 'Ҳеҷ шодӣ нест андар ин ҷаҳон, Бартар аз дидори рӯи дӯстон.', author: 'Рӯдакӣ' },
-            { text: 'Бӯи ҷӯи Мӯлиён ояд ҳаме, Ёди ёри меҳрубон ояд ҳаме.', author: 'Рӯдакӣ' },
-            { text: 'Бани одам аъзои якдигаранд, Ки дар офариниш зи як гавҳаранд.', author: 'Саъдӣ' },
-            { text: 'Чу узве ба дард оварад рӯзгор, Дигар узвҳоро намонад қарор.', author: 'Саъдӣ' },
-            { text: 'Тавоно бувад ҳар кӣ доно бувад, Зи дониш дили пир барно бувад.', author: 'Фирдавсӣ' },
             { text: 'Дониш чароғи роҳи зиндагист.', author: 'Ҳикмати мардумӣ' },
             { text: 'Меҳнат калиди бахт аст.', author: 'Ҳикмати мардумӣ' },
             { text: 'Аз кор натарс, аз танбалӣ битарс.', author: 'Ҳикмати мардумӣ' },
@@ -567,7 +734,13 @@
             { text: 'Обрӯ аз тилло беҳтар аст.', author: 'Ҳикмати мардумӣ' },
             { text: 'Илм беамал — дарахти бесамар аст.', author: 'Ҳикмати мардумӣ' },
             { text: 'Ватан — модари дуввуми инсон аст.', author: 'Ҳикмати мардумӣ' },
-            { text: 'Хомӯшӣ баъзан беҳтарин ҷавоб аст.', author: 'Ҳикмати мардумӣ' }
+            { text: 'Хомӯшӣ баъзан беҳтарин ҷавоб аст.', author: 'Ҳикмати мардумӣ' },
+            { text: 'Ҳар оғоз душвор аст, аммо қадами аввал муҳимтарин аст.', author: 'Ҳикмати мардумӣ' },
+            { text: 'Сабр талх аст, вале самараш ширин аст.', author: 'Ҳикмати мардумӣ' },
+            { text: 'Имрӯз коратро ба фардо магузор.', author: 'Ҳикмати мардумӣ' },
+            { text: 'Ҳар шикаст омӯзгори нав аст.', author: 'Ҳикмати мардумӣ' },
+            { text: 'Тавоно бувад ҳар кӣ доно бувад.', author: 'Фирдавсӣ' },
+            { text: 'Обрӯи худро нигоҳ дор, зеро гумшуда бозгашт надорад.', author: 'Ҳикмати мардумӣ' }
         ];
 
         const FAQ_DATA = {
@@ -579,8 +752,9 @@
                 { q: '📱 Чӣ тавр барномаро бо дигарон мубодила кардан мумкин?', a: 'Тугмаи "Мубодила"-ро дар плеер ё саҳифаи радио пахш кунед — истинод ба барнома дар Play Market нусхабардорӣ мешавад.' },
                 { q: '🎯 Чӣ тавр шкалаи танзими радиоро истифода баред?', a: 'Дар саҳифаи асосӣ шкалаи FM-ро бо ангушт кашед — радиои наздиктарин ба частота худкор фаъол мешавад.' },
                 { q: '🎲 Тугмаи "Тасодуфӣ" чист?', a: 'Ин тугма радиои тасодуфиро интихоб ва фаъол мекунад — усули хуб барои кашфи радиоҳои нав.' },
-                { q: '📅 Радиои ҳафта чист?', a: 'Ҳар ҳафта барнома як радиоро бо тасодуф интихоб карда, дар саҳифаи асосӣ калон нишон медиҳад — усули хуб барои кашфи станцияҳое, ки шумо надонистаед.' },
-                { q: '🏅 Ниҳонҳо (ачивкаҳо) чист?', a: 'Барои фаъолияти шумо дар барнома — шунидани якчанд радио, силсилаи рӯзҳо, натиҷаи баланд дар бозиҳо — ниҳонҳо кушода мешаванд. Дар бахши "Оморҳои шумо" бинед.' },
+                { q: '📅 Радиои ҳафта чист?', a: 'Ҳар ҳафта барнома як радиоро бо тасодуф интихоб карда, дар саҳифаи асосӣ калон нишон медиҳад.' },
+                { q: '🏅 Ниҳонҳо (ачивкаҳо) чист?', a: 'Барои фаъолияти шумо дар барнома ниҳонҳо кушода мешаванд. Дар бахши "Оморҳои шумо" бинед.' },
+                { q: '👁️ Ҳарфи калон чист?', a: 'Дар профил "Ҳарфи калон"-ро фаъол кунед, то матни барнома калонтар ва хонданаш осонтар шавад.' },
                 { q: '👨‍💻 Кӣ таҳиягар аст?', a: 'Барнома аз ҷониби студияи Kurush Digital сохта шудааст. Агар ба шумо монанди он лозим бошад — дар Telegram нависед: @kurush_digital' },
                 { q: '💸 Барнома пулки аст?', a: 'Не! Комелан ройгон. Мо барои гӯш кардани радио пул намегирем.' },
                 { q: '📊 Оё дар замина гӯш кардан мумкин аст?', a: 'Ҳа. Радио ҳатто вақте ки шумо саҳифаро мепӯшед ё телефони худро қулф мекунед, боз ҳам мепазад (дар дастгоҳҳои мобилӣ).' },
@@ -594,8 +768,9 @@
                 { q: '📱 Как поделиться приложением с друзьями?', a: 'Нажмите кнопку «Поделиться» в плеере или на странице радио — скопируется ссылка на приложение в Play Market.' },
                 { q: '🎯 Как пользоваться шкалой настройки радио?', a: 'На главном экране потяните FM-шкалу пальцем — ближайшая по частоте станция включится автоматически.' },
                 { q: '🎲 Что делает кнопка «Наугад»?', a: 'Эта кнопка выбирает и включает случайную радиостанцию — хороший способ открыть для себя что-то новое.' },
-                { q: '📅 Что такое «Радио недели»?', a: 'Каждую неделю приложение выделяет одну станцию крупным блоком на главном экране — хороший способ открыть для себя то, что раньше терялось в общем списке.' },
-                { q: '🏅 Что такое ачивки?', a: 'За вашу активность в приложении — прослушивание нескольких станций, серию дней подряд, высокий результат в играх — открываются значки достижений. Смотрите в разделе «Ваша статистика».' },
+                { q: '📅 Что такое «Радио недели»?', a: 'Каждую неделю приложение выделяет одну станцию крупным блоком на главном экране.' },
+                { q: '🏅 Что такое ачивки?', a: 'За вашу активность в приложении открываются значки достижений. Смотрите в разделе «Ваша статистика».' },
+                { q: '👁️ Что такое «Крупный текст»?', a: 'В профиле включите «Крупный текст», чтобы весь текст приложения стал крупнее и его было легче читать.' },
                 { q: '👨‍💻 Кто разработчик?', a: 'Приложение создано студией Kurush Digital. Если вам нужно что-то подобное — пишите в Telegram: @kurush_digital' },
                 { q: '💸 Приложение платное?', a: 'Нет! Полностью бесплатно. Мы не берём плату за прослушивание радио.' },
                 { q: '📊 Можно ли слушать в фоновом режиме?', a: 'Да. Радио продолжает играть, даже когда вы закрываете страницу или блокируете телефон (на мобильных устройствах).' },
@@ -605,29 +780,31 @@
 
         const STRINGS = {
             tg: {
-                recentTitle: 'Ба наздикӣ гӯш кардаед', recentEmpty: 'Ҳанӯз ҳеҷ радио гӯш нашудааст',
+                newAddedTitle: 'Навакак илова шуд', newBadge: 'НАВ',
                 nowPlayingLabel: 'Пахши зинда', noStation: 'Радио интихоб нашудааст',
                 listenBtn: 'Гӯш кардан', pauseBtn: 'Таваққуф', loadingBtn: 'Бор мешавад...',
-                rouletteBtnLabel: 'Тасодуфӣ', shareBtnLabel: 'Мубодила', sleepBtnDefault: 'Таймер',
+                nextBtnLabel: 'Дигар', prevBtnLabel: 'Қаблӣ', rouletteBtnLabel: 'Тасодуфӣ', shareBtnLabel: 'Мубодила', sleepBtnDefault: 'Таймер',
                 gamesTitle: 'Бозиҳо', gamesDesc: 'Дар вақти гӯш кардани радио бозӣ кунед', gamesOpenBtn: 'Бозиҳоро кушоед',
                 factTitle: 'Панди рӯз', popularTitle: 'Маъмултарин радиоҳо', seeAllBtn: 'Ҳамаи радиоҳоро дидан',
                 weekTag: '⭐ Радиои ҳафта',
                 backBtn: 'Бозгашт', favBtnLabel: 'Дӯстдошта', favBtnActive: 'Дар дӯстдошта',
                 searchPlaceholder: '🔍 Ҷустуҷӯи радио...', filterAll: 'Ҳама', filterFav: '❤️ Дӯстдошта',
-                shuffleHint: 'Тартиб омехта',
+                shuffleHint: 'Тартиб ҳафтаина',
                 emptySearchTitle: 'Ҳеҷ чиз ёфт нашуд', emptySearchDesc: 'Калимаи дигареро санҷед ё филтрро иваз кунед.',
                 emptyFavTitle: 'Радио ба дӯстдошта илова нашудааст', emptyFavDesc: 'Барои илова кардан, дар бахши "Радио" ❤️-ро пахш кунед.',
                 profileTitle: '👤 Профил', langLabel: 'Забон', statsLabel: 'Оморҳои шумо',
+                textSizeLabel: 'Андозаи матн', textSizeNormal: 'Оддӣ', textSizeLarge: 'Калон',
                 sleepLabel: 'Таймери хоб', sleepDesc: 'Пахшро баъд аз вақти муайяншуда бас кунед.',
                 contactLabel: 'Бо мо дар тамос шавед',
-                contactDesc1: 'Радиоҳои Тоҷикистон барои шумо сохта шудааст, ва мо ҳамеша хурсандем аз шунавандагони худ. Агар радиои дигареро мешиносед, ки дар рӯйхати мо нест — ба мо хабар диҳед, мо онро дар наздиктарин вақт илова мекунем. Агар савол, пешниҳод ё мушкилот дар кори барнома дидед — бетаъхир нависед, мо ҳамеша барои кумак омодаем ва дар муддати кӯтоҳ ҷавоб медиҳем.',
-                contactDesc2: 'Агар Шумо соҳиби яке аз радиостансияҳои мазкур ҳастед ва намехоҳед, ки радиои Шумо дар ин барнома нишон дода шавад —  ба мо нависед. Мо ба ҳуқуқи ҳар яки шумо эҳтиром мегузорем ва дар чунин ҳолат радиоро фавран аз рӯйхат хориҷ мекунем.',
+                contactDesc1: 'Радиоҳои Тоҷикистон барои шумо сохта шудааст. Агар радиои дигареро мешиносед, ки дар рӯйхати мо нест — ба мо хабар диҳед, мо онро дар наздиктарин вақт илова мекунем. Агар савол, пешниҳод ё мушкилот дар кори барнома доред — бетаъхир нависед, мо ҳамеша барои кумак омодаем ва дар муддати кӯтоҳ ҷавоб медиҳем.',
+                contactDesc2: 'Агар шумо соҳиби яке аз радиостансияҳои мазкур ҳастед ва намехоҳед, ки радиои шумо дар ин барнома нишон дода шавад? ба мо нависед. Мо ба ҳуқуқи ҳар яки Шумо эҳтиром мегузорем ва дар чунин ҳолат радиоро фавран аз рӯйхат хориҷ мекунем.',
                 contactDesc3: 'Фикру андешаи шумо барои мо арзиш дорад — ҳар паём хонда мешавад.',
-                donateLabel: 'Дастгирии таҳиягар', donateDesc: 'Салом, дӯсти азиз!\nИн барномаро барои Шумо ройгон сохтем. Агар ба Шумо маъқул бошад метавонед моро дастгирӣ кунед.',
+                donateLabel: 'Дастгирии таҳиягар', donateDesc: '«Радиои Тоҷикистон — лоиҳаи мустақили мо, ки бо меҳр ва масъулият сохта шудааст.\n\nБарои нигоҳ доштан ва рушди он, мо вақт ва захира сарф мекунем. Ҳар як дастгирии шумо ба мо имкон медиҳад, ки сифати хизматрасонӣ ва навсозиҳоро беҳтар кунем.\n\nАгар ин лоиҳа барои шумо арзиш дорад, шумо метавонед моро дастгирӣ кунед. Ташаккур барои бовари шумо».',
                 cardNumberLabel: '💳 Номер карта:', bankLabel: '(Алиф Бонк)',
+                revealCardBtn: 'Нишон додани реквизитҳо',
                 writeUsBtn: '📨 Навиштан ба мо', writeTelegramBtn: '📨 Навиштан дар Telegram',
                 rateLabel: 'Баҳо диҳед', aboutLabel: 'Дар бораи барнома',
-                aboutText1: '«Радиоҳои Тоҷикистон» — агрегатори радиостанцияҳои Тоҷикистон.',
+                aboutText1: '«Радиоҳои Тоҷикистон» — агрегатори радиостансияҳои Тоҷикистон.',
                 versionLabel: 'Версия', devLabel: 'Таҳиягар', copyrightFooter: '© 2026 Ҳама ҳуқуқҳо ҳифз шудаанд.',
                 logoutLabel: 'Баромадан', logoutConfirm: 'Оё шумо баромадед мехоҳед?',
                 tuningHint: '👆 Барои танзими дастӣ бо ангушт кашед',
@@ -640,29 +817,35 @@
                 statsSessions: 'бор гӯш кардаед', statsStreak: 'рӯз пайдарпай', statsFav: 'радиои дӯстдоштатарин', statsBucket: 'бештар гӯш мекунед',
                 bucketNight: 'шабона', bucketMorning: 'субҳона', bucketDay: 'рӯзона', bucketEvening: 'шомона',
                 shareMessage: 'Гӯш кунед радиоҳои Тоҷикистонро дар барномаи мо!',
-                badgesTitle: 'Ниҳонҳо', badgeExplorer: 'Кашшоф', badgeRegular: 'Мунтазам', badgeActive: 'Шунавандаи фаъол', badgeQuiz: 'Устоди квиз', badgeRhythm: 'Устоди ритм'
+                badgesTitle: 'Ниҳонҳо', badgeExplorer: 'Кашшоф', badgeRegular: 'Мунтазам', badgeActive: 'Шунавандаи фаъол', badgeQuiz: 'Устоди квиз', badgeRhythm: 'Устоди ритм',
+                offlineText: 'Пайвасти интернет нест', offlineRetry: 'Аз нав кӯшиш',
+                timeoutText: '⏱ Пайваст суст аст. Радиои дигарро интихоб кунед.',
+                bgPlayingToast: '🎵 Дар замина пахш мешавад',
+                emptyHistory: '📻 Таърихи холӣ'
             },
             ru: {
-                recentTitle: 'Недавно слушали', recentEmpty: 'Пока нет прослушанных радиостанций',
+                newAddedTitle: 'Недавно добавленные', newBadge: 'НОВОЕ',
                 nowPlayingLabel: 'Прямой эфир', noStation: 'Радио не выбрано',
                 listenBtn: 'Слушать', pauseBtn: 'Пауза', loadingBtn: 'Загрузка...',
-                rouletteBtnLabel: 'Наугад', shareBtnLabel: 'Поделиться', sleepBtnDefault: 'Таймер',
+                nextBtnLabel: 'Далее', prevBtnLabel: 'Назад', rouletteBtnLabel: 'Наугад', shareBtnLabel: 'Поделиться', sleepBtnDefault: 'Таймер',
                 gamesTitle: 'Игры', gamesDesc: 'Играйте, пока слушаете радио', gamesOpenBtn: 'Открыть игры',
                 factTitle: 'Мудрость дня', popularTitle: 'Популярные радио', seeAllBtn: 'Смотреть все радио',
                 weekTag: '⭐ Радио недели',
                 backBtn: 'Назад', favBtnLabel: 'Избранное', favBtnActive: 'В избранном',
                 searchPlaceholder: '🔍 Поиск радио...', filterAll: 'Все', filterFav: '❤️ Избранное',
-                shuffleHint: 'Порядок случайный',
+                shuffleHint: 'Порядок раз в неделю',
                 emptySearchTitle: 'Ничего не найдено', emptySearchDesc: 'Попробуйте другое слово или смените фильтр.',
                 emptyFavTitle: 'Пока нет избранных радиостанций', emptyFavDesc: 'Чтобы добавить, нажмите ❤️ в разделе «Радио».',
                 profileTitle: '👤 Профиль', langLabel: 'Язык', statsLabel: 'Ваша статистика',
+                textSizeLabel: 'Размер текста', textSizeNormal: 'Обычный', textSizeLarge: 'Крупный',
                 sleepLabel: 'Таймер сна', sleepDesc: 'Автоматически остановить радио через выбранное время.',
                 contactLabel: 'Свяжитесь с нами',
                 contactDesc1: 'Радиоҳои Тоҷикистон сделано для вас, и мы всегда рады слышать своих слушателей. Если вы знаете радиостанцию, которой нет в нашем списке — сообщите нам, мы добавим её в ближайшее время. Если у вас есть вопрос, предложение или проблема в работе приложения — пишите без стеснения, мы всегда готовы помочь и отвечаем в короткие сроки.',
                 contactDesc2: 'Если вы владелец одной из представленных радиостанций и не хотите, чтобы она отображалась в этом приложении — тоже напишите нам. Мы уважаем права каждого владельца радио и в таком случае немедленно удалим станцию из списка.',
                 contactDesc3: 'Ваше мнение важно для нас — каждое сообщение читается.',
-                donateLabel: 'Поддержать разработчика', donateDesc: 'Привет, дорогой друг!\nМы сделали это приложение для вас бесплатно. Если оно вам нравится — вы можете нас поддержать.',
+                donateLabel: 'Поддержать разработчика', donateDesc: 'Это приложение мы сделали с нуля своими руками, вложив в него дни и ночи работы — чтобы вы каждый день могли бесплатно слушать любимое радио без единой рекламы.\n\nСервер, трафик и постоянные обновления стоят денег, и всё это держится только на поддержке таких неравнодушных людей, как вы.\n\nЕсли это приложение каждый день рядом с вами — в дороге, на работе, перед сном — уделите минуту и поддержите нас. Даже небольшая сумма значит для нас очень много.',
                 cardNumberLabel: '💳 Номер карты:', bankLabel: '(Алиф Банк)',
+                revealCardBtn: 'Показать реквизиты',
                 writeUsBtn: '📨 Написать нам', writeTelegramBtn: '📨 Написать в Telegram',
                 rateLabel: 'Оценить приложение', aboutLabel: 'О приложении',
                 aboutText1: '«Радиоҳои Тоҷикистон» — агрегатор радиостанций Таджикистана.',
@@ -678,20 +861,53 @@
                 statsSessions: 'сеансов прослушивания', statsStreak: 'дней подряд', statsFav: 'любимая станция', statsBucket: 'чаще всего слушаете',
                 bucketNight: 'ночью', bucketMorning: 'утром', bucketDay: 'днём', bucketEvening: 'вечером',
                 shareMessage: 'Слушайте радио Таджикистана в нашем приложении!',
-                badgesTitle: 'Ачивки', badgeExplorer: 'Исследователь', badgeRegular: 'Постоянный слушатель', badgeActive: 'Активный слушатель', badgeQuiz: 'Мастер квиза', badgeRhythm: 'Мастер ритма'
+                badgesTitle: 'Ачивки', badgeExplorer: 'Исследователь', badgeRegular: 'Постоянный слушатель', badgeActive: 'Активный слушатель', badgeQuiz: 'Мастер квиза', badgeRhythm: 'Мастер ритма',
+                offlineText: 'Нет подключения к интернету', offlineRetry: 'Повторить',
+                timeoutText: '⏱ Соединение слабое. Выберите другую станцию.',
+                bgPlayingToast: '🎵 Играет в фоне',
+                emptyHistory: '📻 История пуста'
             }
         };
+
         function t(key) { return STRINGS[currentLang][key] !== undefined ? STRINGS[currentLang][key] : key; }
         function applyStrings() {
             document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (STRINGS.tg[k] !== undefined) el.textContent = t(k); });
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { const k = el.getAttribute('data-i18n-placeholder'); if (STRINGS.tg[k] !== undefined) el.placeholder = t(k); });
-            document.querySelectorAll('.flag-btn, .lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
+            document.querySelectorAll('.flag-btn, .lang-btn[data-lang]').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
+            document.querySelectorAll('.lang-btn[data-size]').forEach(b => b.classList.toggle('active', b.dataset.size === currentTextSize));
             refreshTimerLabels();
         }
         function refreshTimerLabels() {
             document.querySelectorAll('.timer-opt').forEach(b => {
                 const min = parseInt(b.dataset.min);
                 b.textContent = min === 0 ? (currentLang === 'tg' ? 'Хомӯш' : 'Выкл') : (min + (currentLang === 'tg' ? ' дақ' : ' мин'));
+            });
+        }
+
+        let currentTextSize = localStorage.getItem('textSize') || 'normal';
+        function setTextSize(size) {
+            currentTextSize = size;
+            localStorage.setItem('textSize', size);
+            document.documentElement.classList.toggle('large-text', size === 'large');
+            document.querySelectorAll('.lang-btn[data-size]').forEach(b => b.classList.toggle('active', b.dataset.size === size));
+        }
+
+        const LOGO_CACHE_KEY = 'radioLogoCache';
+        let logoCache = (() => { try { return JSON.parse(localStorage.getItem(LOGO_CACHE_KEY)) || {}; } catch(e) { return {}; } })();
+        function saveLogoCache() { try { localStorage.setItem(LOGO_CACHE_KEY, JSON.stringify(logoCache)); } catch(e) {} }
+        function preloadLogo(idx, url) {
+            if (!url || logoCache[idx]) return;
+            const img = new Image();
+            img.onload = () => { logoCache[idx] = url; saveLogoCache(); refreshAvatarFor(idx, url); };
+            img.src = url;
+        }
+        function refreshAvatarFor(idx, url) {
+            document.querySelectorAll(`.station-avatar[data-station-idx="${idx}"]`).forEach(el => {
+                el.style.backgroundImage = `url('${url}')`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+                el.textContent = '';
+                el.classList.add('cached');
             });
         }
 
@@ -704,27 +920,61 @@
             if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
             return (words[0][0] + words[1][0]).toUpperCase();
         }
-        function applyAvatar(el, radio) {
+        function applyAvatar(el, radio, idx) {
             if (!el || !radio) return;
-            el.style.background = getStationGradient(radio.name);
-            el.textContent = getStationInitials(radio.name);
-            const existingImg = el.querySelector('img.logo-img');
-            if (existingImg) existingImg.remove();
-            if (radio.logo) {
-                const img = document.createElement('img');
-                img.className = 'logo-img';
-                img.src = radio.logo;
-                img.alt = radio.name;
-                img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;';
-                img.onerror = () => img.remove();
-                el.appendChild(img);
+            if (idx !== undefined) el.setAttribute('data-station-idx', idx);
+            const cachedUrl = idx !== undefined ? logoCache[idx] : null;
+            if (cachedUrl) {
+                el.style.backgroundImage = `url('${cachedUrl}')`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+                el.textContent = '';
+                el.classList.add('cached');
+            } else {
+                el.style.background = getStationGradient(radio.name);
+                el.textContent = getStationInitials(radio.name);
+                el.classList.remove('cached');
+                if (radio.logo && idx !== undefined) preloadLogo(idx, radio.logo);
             }
         }
 
-        function shuffleArray(arr) {
+        function seededRandom(seed) {
+            return function () {
+                seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+                let r = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+                r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
+                return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+            };
+        }
+        function shuffleWithSeed(arr, seed) {
+            const rand = seededRandom(seed);
             const a = arr.slice();
-            for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; }
+            for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; }
             return a;
+        }
+        function getWeekIndex() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 1);
+            return Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+        }
+        function getDayIndex() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+        }
+        function computeWeeklyRadioOrder() {
+            const WEEK_KEY = 'radioWeekOrder';
+            const storedWeek = localStorage.getItem('radioWeekIndex');
+            const currentWeek = getWeekIndex();
+            if (storedWeek == currentWeek) {
+                try { const saved = JSON.parse(localStorage.getItem(WEEK_KEY)); if (Array.isArray(saved) && saved.length === RADIOS.length) return saved; } catch(e) {}
+            }
+            let order = shuffleWithSeed(RADIOS.map((_, i) => i), currentWeek);
+            const priorityIdx = RADIOS.findIndex(r => r.priority);
+            if (priorityIdx !== -1) { order = order.filter(i => i !== priorityIdx); order.unshift(priorityIdx); }
+            localStorage.setItem('radioWeekIndex', currentWeek);
+            localStorage.setItem(WEEK_KEY, JSON.stringify(order));
+            return order;
         }
 
         let currentLang = 'tg';
@@ -732,32 +982,37 @@
         let isPlaying = false;
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         let currentStationIndex = -1;
-        let recentRadios = JSON.parse(localStorage.getItem('recentRadios')) || [];
         let listFilter = 'all';
         let sleepTimerMinutes = 0, sleepTimerEnd = null, sleepTimerInterval = null;
         let dialDragging = false;
-        let radioDisplayOrder = RADIOS.map((_, i) => i);
+        let radioDisplayOrder = [];
         const audio = document.getElementById('audioPlayer');
         let listeners = {};
-        const listenerIntervals = {};
-        let currentFactIndex = Math.floor(Math.random() * PANDU.length);
+        let activeListenerInterval = null;
+        let streamTimeoutHandle = null;
+        let stationHistory = [];
+        let statsCache = null;
 
         function generateListenerCount() { return Math.floor(Math.random() * (150 - 12 + 1)) + 12; }
         function listenerText(count) { return currentLang === 'tg' ? `${count} шунаванда` : `${count} слушателей`; }
 
         function initListeners() {
-            RADIOS.forEach((_, i) => {
-                listeners[i] = generateListenerCount();
-                if (listenerIntervals[i]) clearInterval(listenerIntervals[i]);
-                listenerIntervals[i] = setInterval(() => {
-                    listeners[i] = generateListenerCount();
-                    updateRadioListenersUI();
-                    if (currentStationIndex === i) {
-                        document.getElementById('mainListenerCount').innerHTML = `<span class="dot"></span> ${listenerText(listeners[i])}`;
-                        document.getElementById('detailListeners').textContent = `● ${listenerText(listeners[i])}`;
+            RADIOS.forEach((_, i) => { listeners[i] = generateListenerCount(); });
+            startActiveListenerTimer();
+        }
+        function startActiveListenerTimer() {
+            if (activeListenerInterval) clearInterval(activeListenerInterval);
+            activeListenerInterval = setInterval(() => {
+                if (currentStationIndex >= 0) {
+                    listeners[currentStationIndex] = generateListenerCount();
+                    if (isPlaying) {
+                        document.getElementById('mainListenerCount').innerHTML = `<span class="dot"></span> ${listenerText(listeners[currentStationIndex])}`;
+                        document.getElementById('detailListeners').textContent = `● ${listenerText(listeners[currentStationIndex])}`;
+                        const activeItem = document.querySelector(`.radio-item[data-index="${currentStationIndex}"] .radio-listeners`);
+                        if (activeItem) activeItem.textContent = `● ${listenerText(listeners[currentStationIndex])}`;
                     }
-                }, 30000 + Math.random() * 20000);
-            });
+                }
+            }, 25000);
         }
         function updateRadioListenersUI() {
             document.querySelectorAll('.radio-item').forEach(el => {
@@ -776,20 +1031,43 @@
         }
         function refreshGreeting() { document.getElementById('greetingText').textContent = getGreeting(); }
 
-        function getWeekIndex() {
-            const now = new Date();
-            const start = new Date(now.getFullYear(), 0, 1);
-            const week = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
-            return week % RADIOS.length;
-        }
         function renderWeekCard() {
-            const idx = getWeekIndex();
+            const WEEK_KEY = 'radioWeekOfIndex';
+            const storedDay = localStorage.getItem('radioWeekDay');
+            const today = getDayIndex();
+            let idx;
+            if (storedDay == today) {
+                idx = parseInt(localStorage.getItem(WEEK_KEY));
+                if (isNaN(idx) || !RADIOS[idx]) idx = getWeekIndex() % RADIOS.length;
+            } else {
+                idx = getWeekIndex() % RADIOS.length;
+                localStorage.setItem('radioWeekDay', today);
+                localStorage.setItem(WEEK_KEY, idx);
+            }
             const radio = RADIOS[idx];
             if (!radio) return;
-            applyAvatar(document.getElementById('weekAvatar'), radio);
+            applyAvatar(document.getElementById('weekAvatar'), radio, idx);
             document.getElementById('weekName').textContent = radio.name;
             document.getElementById('weekFreq').textContent = radio.freq;
             document.getElementById('weekCard').dataset.idx = idx;
+        }
+
+        function showFact() {
+            const FACT_KEY = 'dailyFactIndex';
+            const storedDay = localStorage.getItem('dailyFactDay');
+            const today = getDayIndex();
+            let idx;
+            if (storedDay == today) {
+                idx = parseInt(localStorage.getItem(FACT_KEY));
+                if (isNaN(idx)) idx = today % PANDU.length;
+            } else {
+                idx = today % PANDU.length;
+                localStorage.setItem('dailyFactDay', today);
+                localStorage.setItem(FACT_KEY, idx);
+            }
+            const p = PANDU[idx];
+            document.getElementById('factOfDay').textContent = p.text;
+            document.getElementById('pandAuthor').textContent = '— ' + p.author;
         }
 
         function setLanguage(lang) {
@@ -797,52 +1075,81 @@
             localStorage.setItem('lang', lang);
             applyStrings();
             refreshGreeting();
-            renderRadios(); renderRadiosFull(); renderFavorites(); renderRecent(); renderStreak(); renderWeekCard();
-            showFact(currentFactIndex);
+            renderRadios(); renderRadiosFull(); renderFavorites(); renderNewAdded(); renderStreak(); renderWeekCard();
+            showFact();
             syncAnimation();
+            if (document.getElementById('statsSection').classList.contains('open')) renderStatsSection();
+            if (document.getElementById('faqSection').classList.contains('open')) {
+                const list = document.getElementById('faqList'); list.innerHTML = '';
+                FAQ_DATA[currentLang].forEach(item => {
+                    const div = document.createElement('div'); div.className = 'faq-item';
+                    div.innerHTML = `<div class="faq-question" onclick="this.nextElementSibling.classList.toggle('open')">${item.q} <svg class="icon"><use href="#i-chevron-down"/></svg></div><div class="faq-answer">${item.a}</div>`;
+                    list.appendChild(div);
+                });
+            }
+            updateRadioListenersUI();
+            updateMiniPlayer();
         }
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
+        const PAGE_ORDER = ['main', 'radio', 'favorites', 'profile'];
+        let touchStartX = 0, touchStartY = 0, isSwiping = false;
+
+        function initSwipe() {
+            const container = document.getElementById('swipeContainer');
+            container.addEventListener('touchstart', (e) => {
+                if (e.touches.length !== 1) return;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                isSwiping = false;
+            }, { passive: true });
+            container.addEventListener('touchmove', (e) => {
+                if (e.touches.length !== 1) return;
+                const dx = e.touches[0].clientX - touchStartX;
+                const dy = e.touches[0].clientY - touchStartY;
+                if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy) * 1.5) isSwiping = true;
+            }, { passive: true });
+            container.addEventListener('touchend', (e) => {
+                if (!isSwiping) return;
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                const currentPageEl = document.querySelector('.page.active');
+                if (!currentPageEl) return;
+                const currentPageId = currentPageEl.id.replace('page-', '');
+                if (currentPageId === 'radio-detail') { isSwiping = false; return; }
+                const pos = PAGE_ORDER.indexOf(currentPageId);
+                if (pos === -1) { isSwiping = false; return; }
+                if (dx < -60 && pos < PAGE_ORDER.length - 1) { showPage(PAGE_ORDER[pos + 1], 'right'); }
+                else if (dx > 60 && pos > 0) { showPage(PAGE_ORDER[pos - 1], 'left'); }
+                isSwiping = false;
+            }, { passive: true });
+        }
+
+        function showPage(pageId, direction) {
+            document.querySelectorAll('.page').forEach(p => { p.classList.remove('active', 'slide-in-right', 'slide-in-left'); });
+            const target = document.getElementById('page-' + pageId);
+            if (!target) return;
+            target.classList.add('active');
+            if (direction === 'right') target.classList.add('slide-in-right');
+            else if (direction === 'left') target.classList.add('slide-in-left');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             const navBtn = document.querySelector(`.nav-item[data-page="${pageId}"]`);
             if (navBtn) navBtn.classList.add('active');
             if (pageId === 'favorites') renderFavorites();
-            if (pageId === 'radio') { radioDisplayOrder = shuffleArray(RADIOS.map((_, i) => i)); renderRadiosFull(); updateRadioListenersUI(); }
-            if (pageId === 'main') { renderRecent(); renderRadios(); renderStreak(); renderWeekCard(); syncAnimation(); }
+            if (pageId === 'radio') { renderRadiosFull(); updateRadioListenersUI(); }
+            if (pageId === 'main') { renderNewAdded(); renderRadios(); renderStreak(); renderWeekCard(); syncAnimation(); }
             if (pageId === 'radio-detail') window.scrollTo({ top: 0, behavior: 'smooth' });
             updateMiniPlayer();
         }
 
-        function showFact(index) {
-            if (index < 0) index = PANDU.length - 1;
-            if (index >= PANDU.length) index = 0;
-            currentFactIndex = index;
-            document.getElementById('factOfDay').textContent = PANDU[currentFactIndex].text;
-            document.getElementById('pandAuthor').textContent = '— ' + PANDU[currentFactIndex].author;
-        }
-        document.getElementById('factPrev').addEventListener('click', () => showFact(currentFactIndex - 1));
-        document.getElementById('factNext').addEventListener('click', () => showFact(currentFactIndex + 1));
-
-        function addRecentRadio(index) {
-            if (index === undefined || index === null) return;
-            recentRadios = recentRadios.filter(i => i !== index);
-            recentRadios.unshift(index);
-            if (recentRadios.length > 6) recentRadios.pop();
-            localStorage.setItem('recentRadios', JSON.stringify(recentRadios));
-            renderRecent();
-        }
-        function renderRecent() {
-            const container = document.getElementById('recentList');
+        function renderNewAdded() {
+            const container = document.getElementById('newAddedList');
             container.innerHTML = '';
-            if (recentRadios.length === 0) { container.innerHTML = `<div class="empty-recent">${t('recentEmpty')}</div>`; return; }
-            recentRadios.forEach(idx => {
-                const radio = RADIOS[idx]; if (!radio) return;
-                const div = document.createElement('button'); div.className = 'recent-item';
-                div.innerHTML = `<div class="station-avatar"></div><span class="name">${radio.name}</span>`;
-                applyAvatar(div.querySelector('.station-avatar'), radio);
-                div.addEventListener('click', () => openRadioDetail(idx));
+            const lastThree = RADIOS.map((r, i) => ({ r, i })).slice(-3).reverse();
+            lastThree.forEach(({ r, i }) => {
+                const div = document.createElement('button'); div.className = 'new-added-item';
+                div.innerHTML = `<div class="station-avatar"></div><span class="new-added-badge" data-i18n="newBadge"></span><span class="name">${r.name}</span><span class="freq">${r.freq}</span>`;
+                applyAvatar(div.querySelector('.station-avatar'), r, i);
+                div.querySelector('.new-added-badge').textContent = t('newBadge');
+                div.addEventListener('click', () => openRadioDetail(i));
                 container.appendChild(div);
             });
         }
@@ -886,6 +1193,12 @@
             track.addEventListener('pointercancel', () => { dialDragging = false; needle.classList.remove('dragging'); });
         })();
 
+        function setIconUse(el, id) {
+            if (!el) return;
+            const use = el.querySelector('use');
+            if (use) use.setAttribute('href', '#' + id);
+        }
+
         function syncAnimation() {
             const pulseRing = document.getElementById('pulseRing');
             const waveRing1 = document.getElementById('waveRing1');
@@ -898,18 +1211,29 @@
             const headerLiveText = document.getElementById('headerLiveText');
             const playLabel = document.getElementById('playBtnMainLabel');
             const detailLabel = document.getElementById('detailPlayBtnLabel');
+            const playBtnIcon = document.getElementById('playBtnMainIcon');
+            const detailPlayBtnIcon = document.getElementById('detailPlayBtnIcon');
+            const miniPlayIcon = document.getElementById('miniPlayIcon');
 
             if (isPlaying) {
-                pulseRing.classList.add('pulse'); waveRing1.classList.add('active'); waveRing2.classList.add('active');
-                eqMain.classList.add('playing'); eqDetail.classList.add('playing');
-                if (playBtn) { playBtn.querySelector('i').className = 'fas fa-pause'; if (playLabel) playLabel.textContent = t('pauseBtn'); playBtn.disabled = false; }
-                if (detailPlayBtn) { detailPlayBtn.querySelector('i').className = 'fas fa-pause'; if (detailLabel) detailLabel.textContent = t('pauseBtn'); detailPlayBtn.disabled = false; }
+                pulseRing.classList.add('pulse');
+                waveRing1.classList.add('active');
+                waveRing2.classList.add('active');
+                eqMain.classList.add('playing');
+                eqDetail.classList.add('playing');
+                if (playBtn) { setIconUse(playBtnIcon, 'i-pause'); if (playLabel) playLabel.textContent = t('pauseBtn'); playBtn.disabled = false; }
+                if (detailPlayBtn) { setIconUse(detailPlayBtnIcon, 'i-pause'); if (detailLabel) detailLabel.textContent = t('pauseBtn'); detailPlayBtn.disabled = false; }
+                if (miniPlayIcon) setIconUse(miniPlayIcon, 'i-pause');
                 if (currentRadio) { headerPill.style.display = 'flex'; headerLiveText.textContent = currentRadio.name; }
             } else {
-                pulseRing.classList.remove('pulse'); waveRing1.classList.remove('active'); waveRing2.classList.remove('active');
-                eqMain.classList.remove('playing'); eqDetail.classList.remove('playing');
-                if (playBtn) { playBtn.querySelector('i').className = 'fas fa-play'; if (playLabel) playLabel.textContent = t('listenBtn'); playBtn.disabled = false; }
-                if (detailPlayBtn) { detailPlayBtn.querySelector('i').className = 'fas fa-play'; if (detailLabel) detailLabel.textContent = t('listenBtn'); detailPlayBtn.disabled = false; }
+                pulseRing.classList.remove('pulse');
+                waveRing1.classList.remove('active');
+                waveRing2.classList.remove('active');
+                eqMain.classList.remove('playing');
+                eqDetail.classList.remove('playing');
+                if (playBtn) { setIconUse(playBtnIcon, 'i-play'); if (playLabel) playLabel.textContent = t('listenBtn'); playBtn.disabled = false; }
+                if (detailPlayBtn) { setIconUse(detailPlayBtnIcon, 'i-play'); if (detailLabel) detailLabel.textContent = t('listenBtn'); detailPlayBtn.disabled = false; }
+                if (miniPlayIcon) setIconUse(miniPlayIcon, 'i-play');
                 headerPill.style.display = 'none';
             }
 
@@ -917,7 +1241,7 @@
             const vinylMain = document.getElementById('vinylMain');
             if (currentRadio) {
                 nowPlaying.textContent = currentRadio.name;
-                applyAvatar(vinylMain, currentRadio);
+                applyAvatar(vinylMain, currentRadio, currentStationIndex);
                 document.getElementById('detailName').textContent = currentRadio.name;
                 document.getElementById('detailFreq').textContent = currentRadio.freq;
                 if (!dialDragging) updateTuningDial(currentRadio);
@@ -934,49 +1258,52 @@
             }
             updateFavBtnDetail();
             updateMiniPlayer();
-            adjustBodyPadding();
         }
 
         function updateFavBtnDetail() {
             const btn = document.getElementById('favBtnDetail');
             if (!btn || currentStationIndex === -1) return;
             const isFav = favorites.includes(currentStationIndex);
-            btn.innerHTML = isFav ? `<i class="fas fa-heart" style="color: var(--terracotta);"></i> <span>${t('favBtnActive')}</span>` : `<i class="fa-regular fa-heart"></i> <span>${t('favBtnLabel')}</span>`;
+            if (isFav) {
+                btn.innerHTML = `<svg class="icon" style="color: var(--terracotta);"><use href="#i-heart"/></svg> <span>${t('favBtnActive')}</span>`;
+            } else {
+                btn.innerHTML = `<svg class="icon"><use href="#i-heart-outline"/></svg> <span>${t('favBtnLabel')}</span>`;
+            }
         }
 
         function openRadioDetail(index) {
             const radio = RADIOS[index]; if (!radio) return;
             currentStationIndex = index; currentRadio = radio;
-            applyAvatar(document.getElementById('detailLogo'), radio);
+            applyAvatar(document.getElementById('detailLogo'), radio, index);
             document.getElementById('detailName').textContent = radio.name;
             document.getElementById('detailFreq').textContent = radio.freq;
             document.getElementById('detailDesc').textContent = currentLang === 'tg' ? radio.desc_tg : radio.desc_ru;
 
             const phone = document.getElementById('detailPhone');
-            if (radio.phone) { phone.style.display = 'flex'; phone.href = `tel:${radio.phone}`; phone.innerHTML = `<i class="fas fa-phone"></i> ${radio.phone}`; }
+            if (radio.phone) { phone.style.display = 'flex'; phone.href = `tel:${radio.phone}`; phone.innerHTML = `<svg class="icon"><use href="#i-phone"/></svg> ${radio.phone}`; }
             else { phone.style.display = 'none'; }
 
             const website = document.getElementById('detailWebsite');
-            if (radio.website) { website.style.display = 'flex'; website.href = radio.website; website.innerHTML = `<i class="fas fa-globe"></i> ${radio.website.replace('https://', '')}`; }
+            if (radio.website) { website.style.display = 'flex'; website.href = radio.website; website.innerHTML = `<svg class="icon"><use href="#i-globe"/></svg> ${radio.website.replace('https://', '')}`; }
             else { website.style.display = 'none'; }
 
             const instagram = document.getElementById('detailInstagram');
-            if (radio.instagram) { instagram.style.display = 'flex'; instagram.href = radio.instagram; instagram.innerHTML = `<i class="fab fa-instagram"></i> Instagram`; }
+            if (radio.instagram) { instagram.style.display = 'flex'; instagram.href = radio.instagram; instagram.innerHTML = `<svg class="icon"><use href="#i-instagram"/></svg> Instagram`; }
             else { instagram.style.display = 'none'; }
 
             const telegram = document.getElementById('detailTelegram');
-            if (radio.telegram) { telegram.style.display = 'flex'; telegram.href = radio.telegram; telegram.innerHTML = `<i class="fab fa-telegram-plane"></i> Telegram`; }
+            if (radio.telegram) { telegram.style.display = 'flex'; telegram.href = radio.telegram; telegram.innerHTML = `<svg class="icon"><use href="#i-telegram"/></svg> Telegram`; }
             else { telegram.style.display = 'none'; }
 
             showPage('radio-detail');
             syncAnimation();
-            renderRecent();
+            renderNewAdded();
             updateMiniPlayer();
         }
 
         function togglePlay(index) {
             if (currentStationIndex === index && isPlaying) {
-                audio.pause(); isPlaying = false; syncAnimation(); renderRecent(); updateRadiosListUI(); updateFavoritesUI(); updateMiniPlayer();
+                audio.pause(); isPlaying = false; syncAnimation(); renderNewAdded(); updateRadiosListUI(); updateFavoritesUI(); updateMiniPlayer();
                 return;
             }
             playRadio(index);
@@ -988,38 +1315,125 @@
                 history.push({ i: index, ts: Date.now() });
                 while (history.length > 500) history.shift();
                 localStorage.setItem('listenHistory', JSON.stringify(history));
+                statsCache = null;
             } catch (e) {}
             renderStreak();
         }
 
+        function stopCurrentStream() {
+            if (streamTimeoutHandle) { clearTimeout(streamTimeoutHandle); streamTimeoutHandle = null; }
+            try {
+                audio.pause();
+                audio.removeAttribute('src');
+                audio.load();
+            } catch(e) {}
+        }
+
         function playRadio(index) {
             const radio = RADIOS[index]; if (!radio) return;
+
+            stopCurrentStream();
+
+            if (currentStationIndex !== -1 && currentStationIndex !== index) {
+                stationHistory.push(currentStationIndex);
+                if (stationHistory.length > MAX_HISTORY) stationHistory.shift();
+            }
+
             const playBtn = document.getElementById('playBtnMain');
             const detailPlayBtn = document.getElementById('detailPlayBtn');
             const playLabel = document.getElementById('playBtnMainLabel');
             const detailLabel = document.getElementById('detailPlayBtnLabel');
-            if (playBtn) { playBtn.querySelector('i').className = 'fas fa-spinner fa-spin'; if (playLabel) playLabel.textContent = t('loadingBtn'); playBtn.disabled = true; }
-            if (detailPlayBtn) { detailPlayBtn.querySelector('i').className = 'fas fa-spinner fa-spin'; if (detailLabel) detailLabel.textContent = t('loadingBtn'); detailPlayBtn.disabled = true; }
+            const playBtnIcon = document.getElementById('playBtnMainIcon');
+            const detailPlayBtnIcon = document.getElementById('detailPlayBtnIcon');
 
-            audio.src = radio.stream; audio.load();
+            if (playBtn) { setIconUse(playBtnIcon, 'i-play'); if (playLabel) playLabel.textContent = t('loadingBtn'); playBtn.disabled = true; }
+            if (detailPlayBtn) { setIconUse(detailPlayBtnIcon, 'i-play'); if (detailLabel) detailLabel.textContent = t('loadingBtn'); detailPlayBtn.disabled = true; }
+
+            streamTimeoutHandle = setTimeout(() => {
+                if (!isPlaying) {
+                    stopCurrentStream();
+                    showToast(t('timeoutText'));
+                    resetPlayButtons();
+                }
+            }, STREAM_TIMEOUT_MS);
+
+            currentStationIndex = index;
+            currentRadio = radio;
+
+            audio.src = radio.stream;
+            audio.load();
+
             const playPromise = audio.play();
+
+            isPlaying = true;
+            syncAnimation();
+            renderNewAdded();
+            updateRadiosListUI();
+            updateFavoritesUI();
+            updateMiniPlayer();
+            addRecentRadio(index);
+            recordListen(index);
+            if (document.getElementById('page-radio-detail').classList.contains('active')) openRadioDetail(index);
+
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    currentStationIndex = index; currentRadio = radio; isPlaying = true;
-                    addRecentRadio(index); recordListen(index);
-                    syncAnimation(); renderRecent(); updateRadiosListUI(); updateFavoritesUI();
-                    if (document.getElementById('page-radio-detail').classList.contains('active')) openRadioDetail(index);
+                    if (streamTimeoutHandle) { clearTimeout(streamTimeoutHandle); streamTimeoutHandle = null; }
                     if (playBtn) playBtn.disabled = false;
                     if (detailPlayBtn) detailPlayBtn.disabled = false;
-                    updateMiniPlayer();
-                }).catch(() => {
+                }).catch((err) => {
+                    console.warn('play() rejected:', err);
+                    if (streamTimeoutHandle) { clearTimeout(streamTimeoutHandle); streamTimeoutHandle = null; }
                     isPlaying = false;
                     showToast(t('connectFail'));
-                    if (playBtn) { playBtn.querySelector('i').className = 'fas fa-play'; if (playLabel) playLabel.textContent = t('listenBtn'); playBtn.disabled = false; }
-                    if (detailPlayBtn) { detailPlayBtn.querySelector('i').className = 'fas fa-play'; if (detailLabel) detailLabel.textContent = t('listenBtn'); detailPlayBtn.disabled = false; }
-                    syncAnimation(); updateMiniPlayer();
+                    resetPlayButtons();
+                    syncAnimation();
+                    updateMiniPlayer();
+                    updateRadiosListUI();
+                    updateFavoritesUI();
                 });
+            } else {
+                if (streamTimeoutHandle) { clearTimeout(streamTimeoutHandle); streamTimeoutHandle = null; }
+                if (playBtn) playBtn.disabled = false;
+                if (detailPlayBtn) detailPlayBtn.disabled = false;
             }
+        }
+
+        function resetPlayButtons() {
+            const playBtn = document.getElementById('playBtnMain');
+            const detailPlayBtn = document.getElementById('detailPlayBtn');
+            const playLabel = document.getElementById('playBtnMainLabel');
+            const detailLabel = document.getElementById('detailPlayBtnLabel');
+            const playBtnIcon = document.getElementById('playBtnMainIcon');
+            const detailPlayBtnIcon = document.getElementById('detailPlayBtnIcon');
+            if (playBtn) { setIconUse(playBtnIcon, 'i-play'); if (playLabel) playLabel.textContent = t('listenBtn'); playBtn.disabled = false; }
+            if (detailPlayBtn) { setIconUse(detailPlayBtnIcon, 'i-play'); if (detailLabel) detailLabel.textContent = t('listenBtn'); detailPlayBtn.disabled = false; }
+        }
+
+        audio.addEventListener('playing', () => {
+            if (!isPlaying) {
+                isPlaying = true;
+                syncAnimation();
+                updateRadiosListUI();
+                updateFavoritesUI();
+                updateMiniPlayer();
+            }
+        });
+
+        audio.addEventListener('error', () => {
+            if (isPlaying && currentStationIndex !== -1) {
+                isPlaying = false;
+                syncAnimation();
+                updateMiniPlayer();
+                updateRadiosListUI();
+                updateFavoritesUI();
+                showToast(t('connectFail'));
+            }
+        });
+
+        function playPreviousStation() {
+            if (stationHistory.length === 0) { showToast(t('emptyHistory')); return; }
+            const prev = stationHistory.pop();
+            playRadio(prev);
         }
 
         const miniPlayer = document.getElementById('miniPlayer');
@@ -1027,8 +1441,10 @@
         const miniPlayerStatus = document.getElementById('miniPlayerStatus');
         const miniPlayBtn = document.getElementById('miniPlayBtn');
         const miniCloseBtn = document.getElementById('miniCloseBtn');
+        const miniPrevBtn = document.getElementById('miniPrevBtn');
         const miniAvatar = document.getElementById('miniAvatar');
         const miniPlayerInfo = document.getElementById('miniPlayerInfo');
+        const miniPlayIcon = document.getElementById('miniPlayIcon');
 
         function updateMiniPlayer() {
             if (currentRadio) {
@@ -1036,18 +1452,19 @@
                 let statusText = isPlaying ? (currentLang === 'tg' ? '🎵 Гӯш карда истодаед' : '🎵 Слушаете сейчас') : `⏸ ${t('pauseBtn')}`;
                 if (isPlaying && sleepTimerEnd) { const remain = Math.max(0, Math.round((sleepTimerEnd - Date.now()) / 60000)); statusText += ` · ⏰ ${remain} ${currentLang === 'tg' ? 'дақ' : 'мин'}`; }
                 miniPlayerStatus.textContent = statusText;
-                miniPlayBtn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
-                applyAvatar(miniAvatar, currentRadio);
+                if (miniPlayIcon) setIconUse(miniPlayIcon, isPlaying ? 'i-pause' : 'i-play');
+                applyAvatar(miniAvatar, currentRadio, currentStationIndex);
                 miniPlayer.classList.add('show');
             } else { miniPlayer.classList.remove('show'); }
-            adjustBodyPadding();
         }
         miniPlayBtn.addEventListener('click', function () {
             if (isPlaying) { audio.pause(); isPlaying = false; syncAnimation(); updateMiniPlayer(); updateRadiosListUI(); updateFavoritesUI(); }
             else { playRadio(currentStationIndex === -1 ? 0 : currentStationIndex); }
         });
+        miniPrevBtn.addEventListener('click', playPreviousStation);
         miniCloseBtn.addEventListener('click', function () {
-            audio.pause(); isPlaying = false; clearSleepTimer(); syncAnimation(); updateMiniPlayer(); updateRadiosListUI(); updateFavoritesUI();
+            stopCurrentStream(); isPlaying = false; currentRadio = null; currentStationIndex = -1;
+            clearSleepTimer(); syncAnimation(); updateMiniPlayer(); updateRadiosListUI(); updateFavoritesUI();
         });
         miniPlayerInfo.addEventListener('click', function () { if (currentStationIndex !== -1) openRadioDetail(currentStationIndex); });
 
@@ -1092,6 +1509,15 @@
             }
             step(55);
         }
+        function playNextStation() {
+            const order = radioDisplayOrder.length ? radioDisplayOrder : RADIOS.map((_, i) => i);
+            const posInOrder = order.indexOf(currentStationIndex);
+            const nextPos = posInOrder === -1 ? 0 : (posInOrder + 1) % order.length;
+            playRadio(order[nextPos]);
+        }
+        document.getElementById('nextBtnMain').addEventListener('click', playNextStation);
+        document.getElementById('nextBtnDetail').addEventListener('click', playNextStation);
+        document.getElementById('prevBtnMain').addEventListener('click', playPreviousStation);
         document.getElementById('rouletteBtn').addEventListener('click', spinRoulette);
 
         function shareStation() {
@@ -1105,9 +1531,10 @@
         document.getElementById('favBtnDetail').addEventListener('click', () => { if (currentStationIndex !== -1) toggleFavorite(currentStationIndex); updateFavBtnDetail(); });
 
         function computeStats() {
+            if (statsCache) return statsCache;
             let history = [];
             try { history = JSON.parse(localStorage.getItem('listenHistory')) || []; } catch (e) {}
-            if (history.length === 0) return null;
+            if (history.length === 0) { statsCache = null; return null; }
             const counts = {};
             history.forEach(h => { counts[h.i] = (counts[h.i] || 0) + 1; });
             let favIdx = -1, favCount = 0;
@@ -1126,7 +1553,8 @@
                 if (days.includes(check.toDateString())) streakCount++; else break;
             }
             const distinctStations = Object.keys(counts).length;
-            return { totalSessions: history.length, favIdx, favCount, topBucketLabel: t(bucketKeyMap[topBucketKey]), streakCount, daysCount: days.length, distinctStations };
+            statsCache = { totalSessions: history.length, favIdx, favCount, topBucketLabel: t(bucketKeyMap[topBucketKey]), streakCount, daysCount: days.length, distinctStations };
+            return statsCache;
         }
         function renderStreak() {
             const wrap = document.getElementById('streakPillWrap');
@@ -1152,7 +1580,7 @@
             const badgesHtml = `
                 <div class="badges-title">${t('badgesTitle')}</div>
                 <div class="badges-row">
-                    ${badges.map(b => `<div class="badge-chip ${b.unlocked ? '' : 'locked'}"><i class="fas ${b.unlocked ? b.icon : 'fa-lock'}"></i> ${t(b.key)}</div>`).join('')}
+                    ${badges.map(b => `<div class="badge-chip ${b.unlocked ? '' : 'locked'}"><svg class="icon"><use href="#i-star"/></svg> ${t(b.key)}</div>`).join('')}
                 </div>`;
             if (!stats) { section.innerHTML = `<p>${t('statsNoData')}</p>${badgesHtml}`; return; }
             const favName = stats.favIdx >= 0 && RADIOS[stats.favIdx] ? RADIOS[stats.favIdx].name : '—';
@@ -1173,12 +1601,32 @@
             setTimeout(() => toast.remove(), 2600);
         }
 
+        function revealCardDetails() {
+            const content = document.getElementById('cardRevealContent');
+            const btn = document.getElementById('revealCardBtn');
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                btn.innerHTML = `<svg class="icon"><use href="#i-eye"/></svg> <span>${t('revealCardBtn')}</span>`;
+            } else {
+                content.classList.add('show');
+                btn.innerHTML = `<svg class="icon"><use href="#i-eye-off"/></svg> <span>${currentLang === 'tg' ? 'Пинҳон кардан' : 'Скрыть'}</span>`;
+            }
+        }
+
+        function openGames() {
+            if (typeof RadioGames !== 'undefined' && RadioGames.openHub) {
+                RadioGames.openHub(currentLang);
+            } else {
+                showToast(currentLang === 'tg' ? '🎮 Бозиҳо ба наздикӣ илова мешаванд' : '🎮 Игры скоро появятся');
+            }
+        }
+
         document.getElementById('playBtnMain').addEventListener('click', function () {
-            if (isPlaying) { audio.pause(); isPlaying = false; syncAnimation(); renderRecent(); updateRadiosListUI(); updateFavoritesUI(); updateMiniPlayer(); }
+            if (isPlaying) { audio.pause(); isPlaying = false; syncAnimation(); renderNewAdded(); updateRadiosListUI(); updateFavoritesUI(); updateMiniPlayer(); }
             else { playRadio(currentStationIndex === -1 ? 0 : currentStationIndex); }
         });
         document.getElementById('detailPlayBtn').addEventListener('click', function () {
-            if (isPlaying) { audio.pause(); isPlaying = false; syncAnimation(); renderRecent(); updateRadiosListUI(); updateFavoritesUI(); updateMiniPlayer(); }
+            if (isPlaying) { audio.pause(); isPlaying = false; syncAnimation(); renderNewAdded(); updateRadiosListUI(); updateFavoritesUI(); updateMiniPlayer(); }
             else { playRadio(currentStationIndex === -1 ? 0 : currentStationIndex); }
         });
 
@@ -1192,11 +1640,21 @@
         function updateRadiosListUI() {
             document.querySelectorAll('.play-btn-small').forEach(btn => {
                 const idx = parseInt(btn.dataset.index);
-                if (idx === currentStationIndex && isPlaying) { btn.innerHTML = '<i class="fas fa-pause"></i>'; btn.classList.add('playing'); }
-                else { btn.innerHTML = '<i class="fas fa-play"></i>'; btn.classList.remove('playing'); }
+                const use = btn.querySelector('use');
+                if (idx === currentStationIndex && isPlaying) { if (use) use.setAttribute('href', '#i-pause'); btn.classList.add('playing'); }
+                else { if (use) use.setAttribute('href', '#i-play'); btn.classList.remove('playing'); }
             });
-            document.querySelectorAll('.radio-item').forEach(el => { const idx = parseInt(el.dataset.index); el.classList.toggle('is-live', idx === currentStationIndex && isPlaying); });
-            document.querySelectorAll('.favorite-btn').forEach(btn => { const idx = parseInt(btn.dataset.index); btn.innerHTML = favorites.includes(idx) ? '<i class="fas fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'; btn.classList.toggle('active', favorites.includes(idx)); });
+            document.querySelectorAll('.radio-item').forEach(el => {
+                const idx = parseInt(el.dataset.index);
+                el.classList.toggle('is-live', idx === currentStationIndex && isPlaying);
+                el.classList.toggle('is-bg-playing', idx === currentStationIndex && !isPlaying && currentRadio !== null);
+            });
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                const idx = parseInt(btn.dataset.index);
+                const use = btn.querySelector('use');
+                if (use) use.setAttribute('href', favorites.includes(idx) ? '#i-heart' : '#i-heart-outline');
+                btn.classList.toggle('active', favorites.includes(idx));
+            });
             updateRadioListenersUI();
         }
         function updateFavoritesUI() { renderFavorites(); }
@@ -1204,21 +1662,26 @@
         function buildRadioItem(radio, i) {
             const isFav = favorites.includes(i);
             const isCurrent = (i === currentStationIndex && isPlaying);
+            const isBg = (i === currentStationIndex && !isPlaying && currentRadio !== null);
             const div = document.createElement('div');
-            div.className = 'radio-item' + (isCurrent ? ' is-live' : '');
+            div.className = 'radio-item' + (isCurrent ? ' is-live' : '') + (isBg ? ' is-bg-playing' : '');
             div.dataset.index = i; div.dataset.name = radio.name;
             div.innerHTML = `
-                <div class="station-avatar"></div>
+                <button class="favorite-btn ${isFav ? 'active' : ''}" data-index="${i}" onclick="event.stopPropagation(); toggleFavorite(${i})">
+                    <svg class="icon"><use href="#i-${isFav ? 'heart' : 'heart-outline'}"/></svg>
+                </button>
+                <div class="avatar-wrap">
+                    <div class="station-avatar"></div>
+                    <button class="play-btn-small ${isCurrent ? 'playing' : ''}" data-index="${i}" onclick="event.stopPropagation(); togglePlay(${i})">
+                        <svg class="icon"><use href="#i-${isCurrent ? 'pause' : 'play'}"/></svg>
+                    </button>
+                </div>
                 <div class="radio-info">
                     <div class="radio-name">${radio.name}</div>
                     <div class="radio-freq">${radio.freq}</div>
                     <div class="radio-listeners">● ${listenerText(listeners[i] || 0)}</div>
-                </div>
-                <div class="radio-actions">
-                    <button class="favorite-btn ${isFav ? 'active' : ''}" data-index="${i}" onclick="event.stopPropagation(); toggleFavorite(${i})">${isFav ? '<i class="fas fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}</button>
-                    <button class="play-btn-small ${isCurrent ? 'playing' : ''}" data-index="${i}" onclick="event.stopPropagation(); togglePlay(${i})">${isCurrent ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>'}</button>
                 </div>`;
-            applyAvatar(div.querySelector('.station-avatar'), radio);
+            applyAvatar(div.querySelector('.station-avatar'), radio, i);
             div.addEventListener('click', () => openRadioDetail(i));
             return div;
         }
@@ -1248,9 +1711,11 @@
         function renderFavorites() {
             const container = document.getElementById('favoritesList'); container.innerHTML = '';
             if (favorites.length === 0) {
-                container.innerHTML = `<div class="glass-card empty-state"><div class="icon"><i class="fas fa-heart-crack"></i></div><div class="title">${t('emptyFavTitle')}</div><div class="desc">${t('emptyFavDesc')}</div></div>`;
+                container.classList.remove('radio-grid');
+                container.innerHTML = `<div class="glass-card empty-state"><div class="icon"><svg class="icon icon-lg"><use href="#i-heart-outline"/></svg></div><div class="title">${t('emptyFavTitle')}</div><div class="desc">${t('emptyFavDesc')}</div></div>`;
                 return;
             }
+            container.classList.add('radio-grid');
             favorites.forEach(idx => { const radio = RADIOS[idx]; if (!radio) return; container.appendChild(buildRadioItem(radio, idx)); });
         }
 
@@ -1271,7 +1736,7 @@
                 const list = document.getElementById('faqList'); list.innerHTML = '';
                 FAQ_DATA[currentLang].forEach(item => {
                     const div = document.createElement('div'); div.className = 'faq-item';
-                    div.innerHTML = `<div class="faq-question" onclick="this.nextElementSibling.classList.toggle('open')">${item.q} <i class="fas fa-chevron-down"></i></div><div class="faq-answer">${item.a}</div>`;
+                    div.innerHTML = `<div class="faq-question" onclick="this.nextElementSibling.classList.toggle('open')">${item.q} <svg class="icon"><use href="#i-chevron-down"/></svg></div><div class="faq-answer">${item.a}</div>`;
                     list.appendChild(div);
                 });
             }
@@ -1279,8 +1744,8 @@
             if (sectionId === 'stats' && section.classList.contains('open')) { renderStatsSection(); }
         }
 
-        function openTelegram() { window.open('https://t.me/kurush_digital', '_blank'); }
-        function rateApp() { window.open(PLAY_MARKET_URL, '_blank'); }
+        function openTelegram() { window.open('https://t.me/kurush_digital', '_blank', 'noopener,noreferrer'); }
+        function rateApp() { window.open(PLAY_MARKET_URL, '_blank', 'noopener,noreferrer'); }
         function exitApp() {
             if (confirm(t('logoutConfirm'))) {
                 try { window.close(); } catch (e) { window.location.href = 'about:blank'; window.history.go(-999); }
@@ -1289,38 +1754,66 @@
         }
 
         document.querySelectorAll('.nav-item').forEach(btn => {
-            btn.addEventListener('click', () => { showPage(btn.dataset.page); btn.classList.remove('rg-tap'); void btn.offsetWidth; btn.classList.add('rg-tap'); });
+            btn.addEventListener('click', () => {
+                const currentPage = document.querySelector('.page.active');
+                const currentId = currentPage ? currentPage.id.replace('page-', '') : 'main';
+                const newPos = PAGE_ORDER.indexOf(btn.dataset.page);
+                const oldPos = PAGE_ORDER.indexOf(currentId);
+                const direction = newPos > oldPos ? 'right' : 'left';
+                showPage(btn.dataset.page, direction);
+                btn.classList.remove('rg-tap'); void btn.offsetWidth; btn.classList.add('rg-tap');
+            });
         });
 
-        function adjustBodyPadding() {
-            const dock = document.getElementById('bottomDock');
-            if (!dock) return;
-            document.body.style.paddingBottom = (dock.offsetHeight + 24) + 'px';
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            const text = document.getElementById('offlineBannerText');
+            const retryText = document.getElementById('offlineRetryText');
+            if (text) text.textContent = t('offlineText');
+            if (retryText) retryText.textContent = t('offlineRetry');
+            if (navigator.onLine) { banner.classList.remove('show'); }
+            else { banner.classList.add('show'); }
         }
-        window.addEventListener('resize', adjustBodyPadding);
-        window.addEventListener('load', adjustBodyPadding);
-        if (window.ResizeObserver) {
-            const dockElInit = document.getElementById('bottomDock');
-            if (dockElInit) new ResizeObserver(adjustBodyPadding).observe(dockElInit);
+        window.addEventListener('online', () => { updateOnlineStatus(); showToast(currentLang === 'tg' ? '✅ Пайваст барқарор шуд' : '✅ Соединение восстановлено'); });
+        window.addEventListener('offline', updateOnlineStatus);
+        function checkConnectionAndRetry() {
+            if (navigator.onLine) { window.location.reload(); }
+            else { showToast(t('offlineText')); }
+        }
+
+        function addRecentRadio(index) {
+            try {
+                let recent = JSON.parse(localStorage.getItem('recentRadios')) || [];
+                recent = recent.filter(i => i !== index);
+                recent.unshift(index);
+                if (recent.length > 10) recent = recent.slice(0, 10);
+                localStorage.setItem('recentRadios', JSON.stringify(recent));
+            } catch (e) {}
         }
 
         function init() {
             const savedLang = localStorage.getItem('lang') || 'tg';
             currentLang = savedLang;
+            setTextSize(currentTextSize);
+            radioDisplayOrder = computeWeeklyRadioOrder();
             applyStrings();
             initListeners();
-            showFact(currentFactIndex);
-            renderRadios(); renderRadiosFull(); renderFavorites(); renderRecent(); renderStreak(); renderWeekCard();
+            showFact();
+            renderRadios(); renderRadiosFull(); renderFavorites(); renderNewAdded(); renderStreak(); renderWeekCard();
             syncAnimation();
             showPage('main');
             refreshGreeting();
+            initSwipe();
+            updateOnlineStatus();
             document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('tg-TJ', { hour: '2-digit', minute: '2-digit' });
             setInterval(() => {
                 document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('tg-TJ', { hour: '2-digit', minute: '2-digit' });
                 refreshGreeting();
             }, 30000);
-            adjustBodyPadding();
-            setTimeout(adjustBodyPadding, 300);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && isPlaying) showToast(t('bgPlayingToast'));
+            });
         }
         document.addEventListener('DOMContentLoaded', init);
     </script>
